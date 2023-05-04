@@ -1307,32 +1307,6 @@ def modelo_ml(partidas_df, data_da_partida):
 
   return (multi_target_rfc, le, y_test, y_pred, df1_ml)
 
-data_da_partida = '2019-05-12'
-
-partidas_df = importacao_dados_ml()
-
-# Passando o arquivo das partidas para o método df_completo
-df1_ml, df2_ml, df3_ml = df_completo_partidas_casa_fora(partidas_df)
-
-# Convertendo a data de treino para o formato datetime e definindo o valor da data de treino
-data_treino = data_da_partida
-data_treino = datetime.strptime(data_treino, '%Y-%m-%d').date()
-
-# Selecionando as partidas anteriores a data da partida
-partidas_antes_da_data = df1_ml[df1_ml['data_partida'] < data_treino]
-
-# Selecionando a última partida antes da data passada
-ultima_partida_antes_da_data = partidas_antes_da_data.iloc[-1]
-
-# Obtendo a rodada correspondente à última partida antes da data passada
-rodada_da_ultima_partida = ultima_partida_antes_da_data['rodada']
-
-# Encontrar o número da próxima rodada
-proxima_rodada = rodada_da_ultima_partida + 1
-
-# Filtrar o DataFrame original para obter todas as partidas na próxima rodada
-partidas_proxima_rodada = df1_ml[df1_ml['rodada'] == proxima_rodada]
-
 # Método de avaliação do modelo de machine learning
 
 def avaliacao_modelo(y_test, y_pred):
