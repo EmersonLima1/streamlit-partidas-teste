@@ -436,8 +436,11 @@ def df_completo_partidas_gerais(partidas_df):
         'media_posse_de_bola_fora': row['media_posse_de_bola_fora']
       }
 
-      # adicionando o dicionário ao dataframe de médias
-      df_partidas_gerais_1 = df_partidas_gerais_1.append(novas_colunas_1, ignore_index=True)
+      # criando um novo DataFrame com as novas colunas
+      novas_colunas_1_df = pd.DataFrame(novas_colunas_1, index=[0])
+
+      # concatenando com o DataFrame original
+      df_partidas_gerais_1 = pd.concat([df_partidas_gerais_1, novas_colunas_1_df], ignore_index=True)
 
   # Criando colunas de resultados que serão as variáveis target do algoritmo de Machine Learning
   df_partidas_gerais_1['resultado_partida'] = df_partidas_gerais_1.apply(lambda row: 'casa' if row['gols_time_casa'] > row['gols_time_fora'] else ('fora' if row['gols_time_casa'] < row['gols_time_fora'] else 'empate'), axis=1)
@@ -2802,11 +2805,10 @@ def main():
                     data_da_partida = data_widget.strftime("%Y-%m-%d")
 
                     # gerando um dataframe com todas as partidas antes da data passada
-                    data_partida = datetime.strptime(data_da_partida, '%Y-%m-%d').date()
                     partidas_anteriores = partidas_df[partidas_df['data'] < data_da_partida]
 
                     # treinando o modelo
-                    multi_target_rfc, le, y_test, y_pred, df1_ml = modelo_ml(partidas_df, data_da_partida)
+                    multi_target_rfc, le, y_test, y_pred, _ = modelo_ml(partidas_df, data_da_partida)
 
                     # avaliando o modelo
                     acuracia = avaliacao_modelo(y_test, y_pred)
@@ -2823,7 +2825,7 @@ def main():
                       st.write(f"Data da partida: {data_widget}")
 
                       st.write(df_tabela)
-
+                      st.write(df_legenda)
                       st.write(df_casa)
                       st.write(df_fora)
                       st.write(df_res)
