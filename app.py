@@ -1127,7 +1127,7 @@ def nova_previsao_partidas_gerais(ultimas_n_partidas, arbitro, n_partidas, time_
 
 # Método que gera o dataframe que vai ser utilizado como nova previsão (histórico do campeonato)
 
-def historico_campeonato(partidas_casa_time_casa_df1, partidas_fora_time_fora_df1, multi_target_rfc, le):
+def historico_campeonato(partidas_casa_time_casa_df1, partidas_fora_time_fora_df1, multi_target_rfc, le, arbitro, time_casa, time_fora):
 
   df1_casa = nova_previsao_partidas_casa_fora(partidas_casa_time_casa_df1, arbitro)
   df1_fora = nova_previsao_partidas_casa_fora(partidas_fora_time_fora_df1, arbitro)
@@ -1166,7 +1166,7 @@ def historico_campeonato(partidas_casa_time_casa_df1, partidas_fora_time_fora_df
 
 # Método que retorna as novas previsões com base nas últimas partidas jogando em casa e fora
 
-def ultimas_partidas_casa_fora(partidas_casa_time_casa_df1, partidas_casa_time_fora_df1, ultimas_n_partidas, num_partidas, time_casa, time_fora, multi_target_rfc, le):
+def ultimas_partidas_casa_fora(partidas_casa_time_casa_df1, partidas_casa_time_fora_df1, ultimas_n_partidas, num_partidas, time_casa, time_fora, multi_target_rfc, le, arbitro):
 
   df1_casa = nova_previsao_partidas_casa_fora(partidas_casa_time_casa_df1, arbitro)
   df1_fora = nova_previsao_partidas_casa_fora(partidas_casa_time_fora_df1, arbitro)
@@ -1205,7 +1205,7 @@ def ultimas_partidas_casa_fora(partidas_casa_time_casa_df1, partidas_casa_time_f
 
 # Método que retorna as novas previsões com base nas últimas partidas de modo geral
 
-def ultimas_partidas_gerais(partidas_casa_time_casa_df1, partidas_casa_time_fora_df1, ultimas_n_partidas, num_partidas, time_casa, time_fora, multi_target_rfc, le):
+def ultimas_partidas_gerais(partidas_casa_time_casa_df1, partidas_casa_time_fora_df1, ultimas_n_partidas, num_partidas, time_casa, time_fora, multi_target_rfc, le, arbitro):
 
   df_combinado = nova_previsao_partidas_gerais(ultimas_n_partidas, arbitro, num_partidas, time_casa, time_fora)
 
@@ -2772,6 +2772,12 @@ def gerar_tabela(time_casa, time_fora, arbitro, multi_target_rfc, le, partidas_a
   return(df_acuracia, legenda_df)
 
 # Interação com o usuário
+
+# Adicionando os widgets para seleção de times, árbitro e data
+time_casa_widget = st.selectbox('Time da casa:', options=[])
+time_fora_widget = st.selectbox('Time de fora:', options=[])
+arbitro_widget = st.selectbox('Árbitro:', options=[])
+data_widget = st.date_input('Data da partida:', value=None)
 
 arquivo = st.file_uploader("Selecione o arquivo CSV com os dados", type="csv")
 if arquivo is not None:
