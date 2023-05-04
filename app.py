@@ -1909,7 +1909,7 @@ def estilizar_df(df_concatenado_time_casa, df_concatenado_time_fora, df_resultad
     )
   
 
-return(df_tabela, df_legenda, df_casa, df_fora, df_res, df_inf)
+  return(df_tabela, df_legenda, df_casa, df_fora, df_res, df_inf)
 
 
 # Método que gera uma tabela de resultados e médias para o time da casa e o time de fora
