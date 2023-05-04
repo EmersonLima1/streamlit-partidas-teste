@@ -1321,48 +1321,6 @@ def avaliacao_modelo(y_test, y_pred):
   accuracy_cartoes_primeiro = accuracy_score(y_test['resultado_num_cartoes_primeiro'], y_pred[:,10])
   accuracy_cartoes_segundo = accuracy_score(y_test['resultado_num_cartoes_segundo'], y_pred[:,11])
 
-  """# Passo 7: Calcular a precisão do modelo para as variáveis de saída
-  precision_partida = precision_score(y_test['resultado_partida'], y_pred[:, 0], average='weighted')
-  precision_intervalo = precision_score(y_test['resultado_intervalo'], y_pred[:, 1], average='weighted')
-  precision_num_gols_over_under = precision_score(y_test['resultado_num_gols_over_under'], y_pred[:,2], average='weighted')
-  precision_ambas_equipes_marcaram = precision_score(y_test['resultado_ambas_equipes_marcaram'], y_pred[:,3], average='weighted')
-  precision_cartoes_amarelos = precision_score(y_test['resultado_num_cartoes_amarelos'], y_pred[:, 4], average='weighted')
-  precision_cartoes_vermelhos = precision_score(y_test['resultado_num_cartoes_vermelhos'], y_pred[:, 5], average='weighted')
-  precision_cartoes_totais = precision_score(y_test['resultado_num_cartoes_totais'], y_pred[:,6], average='weighted')
-  precision_ambas_equipes_cartoes = precision_score(y_test['resultado_ambas_equipes_receberam_cartoes'], y_pred[:,7], average='weighted')
-  precision_ambos_tempos_cartoes = precision_score(y_test['resultado_cartoes_ambos_tempos'], y_pred[:,8], average='weighted')
-  precision_escanteios = precision_score(y_test['resultado_num_escanteios'], y_pred[:,9], average='weighted')
-  precision_cartoes_primeiro = precision_score(y_test['resultado_num_cartoes_primeiro'], y_pred[:, 10], average='weighted')
-  precision_cartoes_segundo = precision_score(y_test['resultado_num_cartoes_segundo'], y_pred[:, 11], average='weighted')
-
-  # Passo 8: Calcular o recall do modelo para as variáveis de saída
-  recall_partida = recall_score(y_test['resultado_partida'], y_pred[:, 0], average='weighted')
-  recall_intervalo = recall_score(y_test['resultado_intervalo'], y_pred[:, 1], average='weighted')
-  recall_num_gols_over_under = recall_score(y_test['resultado_num_gols_over_under'], y_pred[:,2], average='weighted')
-  recall_ambas_equipes_marcaram = recall_score(y_test['resultado_ambas_equipes_marcaram'], y_pred[:,3], average='weighted')
-  recall_cartoes_amarelos = recall_score(y_test['resultado_num_cartoes_amarelos'], y_pred[:, 4], average='weighted')
-  recall_cartoes_vermelhos = recall_score(y_test['resultado_num_cartoes_vermelhos'], y_pred[:, 5], average='weighted')
-  recall_cartoes_totais = recall_score(y_test['resultado_num_cartoes_totais'], y_pred[:,6], average='weighted')
-  recall_ambas_equipes_cartoes = recall_score(y_test['resultado_ambas_equipes_receberam_cartoes'], y_pred[:,7], average='weighted')
-  recall_ambos_tempos_cartoes = recall_score(y_test['resultado_cartoes_ambos_tempos'], y_pred[:,8], average='weighted')
-  recall_escanteios = recall_score(y_test['resultado_num_escanteios'], y_pred[:,9], average='weighted')
-  recall_cartoes_primeiro = recall_score(y_test['resultado_num_cartoes_primeiro'], y_pred[:, 10], average='weighted')
-  recall_cartoes_segundo = recall_score(y_test['resultado_num_cartoes_segundo'], y_pred[:, 11], average='weighted')
-
-  # Passo 9: Calcular o f1-score do modelo para as variáveis de saída
-  f1_partida = f1_score(y_test['resultado_partida'], y_pred[:, 0], average='weighted')
-  f1_intervalo = f1_score(y_test['resultado_intervalo'], y_pred[:, 1], average='weighted')
-  f1_num_gols_over_under = f1_score(y_test['resultado_num_gols_over_under'], y_pred[:,2], average='weighted')
-  f1_ambas_equipes_marcaram = f1_score(y_test['resultado_ambas_equipes_marcaram'], y_pred[:,3], average='weighted')
-  f1_cartoes_amarelos = f1_score(y_test['resultado_num_cartoes_amarelos'], y_pred[:, 4], average='weighted')
-  f1_cartoes_vermelhos = f1_score(y_test['resultado_num_cartoes_vermelhos'], y_pred[:, 5], average='weighted')
-  f1_cartoes_totais = f1_score(y_test['resultado_num_cartoes_totais'], y_pred[:,6], average='weighted')
-  f1_ambas_equipes_cartoes = f1_score(y_test['resultado_ambas_equipes_receberam_cartoes'], y_pred[:,7], average='weighted')
-  f1_ambos_tempos_cartoes = f1_score(y_test['resultado_cartoes_ambos_tempos'], y_pred[:,8], average='weighted')
-  f1_escanteios = f1_score(y_test['resultado_num_escanteios'], y_pred[:,9], average='weighted')
-  f1_cartoes_primeiro = f1_score(y_test['resultado_num_cartoes_primeiro'], y_pred[:,10], average='weighted')
-  f1_cartoes_segundo = f1_score(y_test['resultado_num_cartoes_segundo'], y_pred[:,11], average='weighted')"""
-
   # criar dicionário com os valores das métricas
   """data = {
       'Acurácia': [f'{accuracy_partida:.2%}', f'{accuracy_intervalo:.2%}', f'{accuracy_num_gols_over_under:.2%}', f'{accuracy_ambas_equipes_marcaram:.2%}', f'{accuracy_cartoes_amarelos:.2%}', f'{accuracy_cartoes_vermelhos:.2%}', f'{accuracy_cartoes_totais:.2%}', f'{accuracy_ambas_equipes_cartoes:.2%}', f'{accuracy_ambos_tempos_cartoes:.2%}', f'{accuracy_escanteios:.2%}', f'{accuracy_cartoes_primeiro:.2%}', f'{accuracy_cartoes_segundo:.2%}'],
@@ -1434,7 +1392,6 @@ def estilizar_df(df_concatenado_time_casa, df_concatenado_time_fora, df_resultad
   
   # Define um estilo para a tabela usando os seletores e propriedades do CSS
   df_casa = (df_casa.style
-        .hide_index() # Esconde a coluna do índice
         .set_caption(title_casa) # Define o título da tabela
         .set_table_styles([{
             'selector': 'caption', # Seletor CSS para o título da tabela
@@ -1512,7 +1469,6 @@ def estilizar_df(df_concatenado_time_casa, df_concatenado_time_fora, df_resultad
 
   # Define um estilo para a tabela usando os seletores e propriedades do CSS
   df_fora = (df_fora.style
-        .hide_index() # Esconde a coluna do índice
         .set_caption(title_fora) # Define o título da tabela
         .set_table_styles([{
             'selector': 'caption', # Seletor CSS para o título da tabela
@@ -1596,7 +1552,6 @@ def estilizar_df(df_concatenado_time_casa, df_concatenado_time_fora, df_resultad
 
   # Define o estilo da tabela de informações, aplicando as configurações de estilo para a caption, th e td
   df_inf = (df_inf.style
-            .hide_index()
             .set_caption(title_inf)
             .set_table_styles([{
                 'selector': 'caption',
@@ -1669,7 +1624,6 @@ def estilizar_df(df_concatenado_time_casa, df_concatenado_time_fora, df_resultad
 
   # Define o estilo da tabela de resultados, aplicando as configurações de estilo para a caption, th e td
   df_res = (df_res.style
-    .hide_index()
     .set_caption(title_res)
     .set_table_styles([{
         'selector': 'caption',
@@ -1718,7 +1672,6 @@ def estilizar_df(df_concatenado_time_casa, df_concatenado_time_fora, df_resultad
 
   # Define um estilo para a tabela usando os seletores e propriedades do CSS
   df_tabela = (df_tabela.style
-        .hide_index() # Esconde a coluna do índice
         .set_caption(title_tabela) # Define o título da tabela
         .set_table_styles([{
             'selector': 'caption', # Seletor CSS para o título da tabela
@@ -1766,7 +1719,6 @@ def estilizar_df(df_concatenado_time_casa, df_concatenado_time_fora, df_resultad
 
   # Define um estilo para a tabela usando os seletores e propriedades do CSS
   df_legenda = (df_legenda.style
-        .hide_index() # Esconde a coluna do índice
         .set_caption(title_legenda) # Define o título da tabela
         .set_table_styles([{
             'selector': 'caption', # Seletor CSS para o título da tabela
