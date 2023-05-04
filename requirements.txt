@@ -4,3 +4,4 @@ tabulate
 numpy
 datetime
 warnings
+streamlit
