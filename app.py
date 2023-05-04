@@ -1164,7 +1164,7 @@ def historico_campeonato(partidas_casa_time_casa_df1, partidas_fora_time_fora_df
   print('\n Previsões')
   fazer_previsao(df_combinado, multi_target_rfc, le)
 
-"""# **Método que retorna as novas previsões com base nas últimas partidas jogando em casa e fora**"""
+# Método que retorna as novas previsões com base nas últimas partidas jogando em casa e fora
 
 def ultimas_partidas_casa_fora(partidas_casa_time_casa_df1, partidas_casa_time_fora_df1, ultimas_n_partidas, num_partidas, time_casa, time_fora, multi_target_rfc, le):
 
@@ -1236,7 +1236,7 @@ def ultimas_partidas_gerais(partidas_casa_time_casa_df1, partidas_casa_time_fora
   print('\n Previsões')
   fazer_previsao(df_combinado, multi_target_rfc, le)
 
-"""# **Método que retorna as novas previsões com base nos confrontos diretos**"""
+# Método que retorna as novas previsões com base nos confrontos diretos
 
 def confrontos_diretos(df3, df2, multi_target_rfc, le, time_casa, time_fora):
 
@@ -1386,7 +1386,7 @@ def avaliacao_modelo(y_test, y_pred):
   #print(tabulate(df_formatted, headers=['Variáveis-alvo', 'Acurácia', 'Precisão', 'Recall', 'F1-Score'], tablefmt='fancy_grid', numalign='center', stralign='center'))
   return(df_final)
 
-"""# **Método que faz as novas previsões**"""
+# Método que faz as novas previsões
 
 def fazer_previsao(df_para_previsao, multi_target_rfc, le):
 
@@ -1416,7 +1416,7 @@ def fazer_previsao(df_para_previsao, multi_target_rfc, le):
   # imprimir tabela com dados formatados
   print(tabulate(nova_tabela, tablefmt='fancy_grid', numalign="center", stralign="center"))
 
-"""# **Método para estilizar os dataframes resultantes**"""
+# Método para estilizar os dataframes resultantes
 
 def estilizar_df(df_concatenado_time_casa, df_concatenado_time_fora, df_resultados_confrontos_diretos, df_info_confrontos_diretos, time_casa, time_fora, tabela, legenda):
   
@@ -2352,17 +2352,6 @@ def tabela_resultados_medias(partidas_anteriores, time_casa, time_fora, multi_ta
 
 # Método que gera o dataframe que vai ser utilizado como nova previsão (histórico do campeonato) para a tabela de previsões
 
-"""
-Função: Esse método monta um DataFrame com as médias acumuladas de diversos indicadores de todas as partidas do time da casa como mandante
-e do time de fora com visitante, esse DataFrame é passado como parâmetro do método fazer_previsao_tabela.
-
-Parâmetro: o método recebe como parâmetro um DataFrame contendo todas as partidas do time da casa como mandante; um DataFrame contendo todas
-as partidas do time de fora como visitante; um objeto do tipo RandomForestClassifier utilizado para fazer previsões; e um objeto do tipo 
-LabelEncoder utilizado para codificar as variáveis categóricas.
-
-Retorno: O método retorna as previsões dos resultados da futura partida que são usadas na tabela completa de previsões.
-
-"""
 def historico_campeonato_previsao_tabela(partidas_casa_time_casa_df1, partidas_casa_time_fora_df1, multi_target_rfc, le, arbitro, time_casa, time_fora):
 
   df1_casa = nova_previsao_partidas_casa_fora(partidas_casa_time_casa_df1, arbitro, time_casa, time_fora)
