@@ -1116,7 +1116,7 @@ def nova_previsao_partidas_gerais(ultimas_n_partidas, arbitro, n_partidas, time_
 
 # Método que gera o dataframe que vai ser utilizado como nova previsão (histórico do campeonato)
 
-def historico_campeonato(partidas_casa_time_casa_df1, partidas_fora_time_fora_df1, multi_target_rfc, le, arbitro, time_casa, time_fora):
+def historico_campeonato(partidas_casa_time_casa_df1, partidas_fora_time_fora_df1, multi_target_rfc, le, arbitro, time_casa, time_fora, partidas_df):
 
   df1_casa = nova_previsao_partidas_casa_fora(partidas_casa_time_casa_df1, arbitro)
   df1_fora = nova_previsao_partidas_casa_fora(partidas_fora_time_fora_df1, arbitro)
@@ -2762,99 +2762,69 @@ def gerar_tabela(time_casa, time_fora, arbitro, multi_target_rfc, le, partidas_a
 
 # Interação com o usuário
 
-# Adicionando os widgets para seleção de times, árbitro e data
-time_casa_widget = st.selectbox('Time da casa:', options=[])
-time_fora_widget = st.selectbox('Time de fora:', options=[])
-arbitro_widget = st.selectbox('Árbitro:', options=[])
-data_widget = st.date_input('Data da partida:', value=None)
-
-arquivo = st.file_uploader("Selecione o arquivo CSV com os dados", type="csv")
-if arquivo is not None:
-    partidas_df = pd.read_csv(arquivo)
-
-    # salvando os nomes dos times da casa em uma lista para futura verificação
-    times_da_casa = sorted(partidas_df['home_team_name'].unique())
-    # salvando os nomes dos times de fora em uma lista para futura verificação
-    times_de_fora = sorted(partidas_df['away_team_name'].unique())
-    # salvando os nomes dos árbitros em uma lista para futura verificação
-    arbitros = sorted(partidas_df['referee'].unique())
-
-    num_partidas = 0
-
-    def previsoes_clicked():
-
-        time_casa = st.selectbox('Time da casa:', options=times_da_casa)
-        time_fora = st.selectbox('Time de fora:', options=times_de_fora)
-        arbitro = st.selectbox('Árbitro:', options=arbitros)
-        data = st.date_input('Data da partida:')
-
-        if time_fora == time_casa:
-            st.error('O time visitante não pode ser o mesmo que o time mandante!')
-            return
-
-        try:
-            # Converte a data para o formato desejado
-            data_da_partida = data.strftime("%Y-%m-%d")
-
-            # gerando um dataframe com todas as partidas antes da data passada
-            data_partida = datetime.strptime(data_da_partida, '%Y-%m-%d').date()
-            partidas_anteriores = partidas_df[partidas_df['data'] < data_da_partida]
-
-            # treinando o modelo
-            multi_target_rfc, le, y_test, y_pred, df1_ml = modelo_ml(partidas_df, data_da_partida)
-
-            # avaliando o modelo
-            acuracia = avaliacao_modelo(y_test, y_pred)
-                  
-            num_partidas = 5
-
-            df_concatenado_time_casa, df_concatenado_time_fora, df_resultados_confrontos_diretos, df_info_confrontos_diretos, time_casa_widget.value, time_fora_widget.value, total_partidas = tabela_resultados_medias(partidas_anteriores, time_casa_widget.value, time_fora_widget.value, multi_target_rfc, le, num_partidas, arbitro_widget.value)
-            if total_partidas != 0:
-              tabela, legenda = gerar_tabela(time_casa_widget.value, time_fora_widget.value, arbitro_widget.value, multi_target_rfc, le, partidas_anteriores, acuracia)
-              df_tabela, df_legenda, df_casa, df_fora, df_res, df_inf = estilizar_df(df_concatenado_time_casa, df_concatenado_time_fora, df_resultados_confrontos_diretos, df_info_confrontos_diretos, time_casa, time_fora, tabela, legenda)
-              st.dataframe(df_tabela)
-              st.dataframe(df_legenda)
-              st.dataframe(df_casa)
-              st.dataframe(df_fora)
-              st.dataframe(df_res)
-              st.dataframe(df_inf)
-            else:
-                st.warning('Não houve partidas jogadas entre o ' + str(time_casa) + ' e o ' + str(time_fora) + '!')
-        except ValueError:
-            st.error('Data inválida')
-
-    def simular_nova_partida():
-        # Limpa a saída anterior
-        st.experimental_rerun()
-
-        # Limpa os componentes para simulação de nova partida
-        times_da_casa.clear()
-        times_de_fora.clear()
-        arbitros.clear()
-        num_partidas = 0
-
-        # Redefine os widgets
-        time_casa_widget.value = ''
-        time_fora_widget.value = ''
-        arbitro_widget.value = ''
-        data_widget.value = ''
-
-
 def main():
+    st.set_page_config(page_title="InPES bet", page_icon=":soccer:")
+
     st.title('Previsão de resultados de futebol')
-    
-    # Adicionando os widgets para seleção de times, árbitro e data
-    time_casa_widget = st.selectbox('Time da casa:', options=times_da_casa)
-    time_fora_widget = st.selectbox('Time de fora:', options=times_de_fora)
-    arbitro_widget = st.selectbox('Árbitro:', options=arbitros)
-    data_widget = st.date_input('Data da partida:')
 
-    # Adicionando botões de ação
-    if st.button('Gerar previsões'):
-        previsoes_clicked()
+    st.header("Selecione o arquivo CSV com os dados")
+    arquivo = st.file_uploader("", type="csv")
 
-    if st.button('Simular nova partida'):
-        simular_nova_partida()
+    if arquivo is not None:
+        partidas_df = pd.read_csv(arquivo)
+
+        # salvando os nomes dos times da casa em uma lista para futura verificação
+        times_da_casa = sorted(partidas_df['home_team_name'].unique())
+        # salvando os nomes dos times de fora em uma lista para futura verificação
+        times_de_fora = sorted(partidas_df['away_team_name'].unique())
+        # salvando os nomes dos árbitros em uma lista para futura verificação
+        arbitros = sorted(partidas_df['referee'].unique())
+
+        num_partidas = 0
+        time_casa_widget = st.selectbox('Time da casa:', options=times_da_casa)
+        time_fora_widget = st.selectbox('Time de fora:', options=times_de_fora)
+        arbitro_widget = st.selectbox('Árbitro:', options=arbitros)
+        data_widget = st.date_input('Data da partida:')
+
+        # Adicionando botões de ação
+        if st.button('Gerar previsões'):
+            if time_fora_widget == time_casa_widget:
+                st.error('O time visitante não pode ser o mesmo que o time mandante!')
+            else:
+                try:
+                    # Converte a data para o formato desejado
+                    data_da_partida = data_widget.strftime("%Y-%m-%d")
+
+                    # gerando um dataframe com todas as partidas antes da data passada
+                    data_partida = datetime.strptime(data_da_partida, '%Y-%m-%d').date()
+                    partidas_anteriores = partidas_df[partidas_df['data'] < data_da_partida]
+
+                    # treinando o modelo
+                    multi_target_rfc, le, y_test, y_pred, df1_ml = modelo_ml(partidas_df, data_da_partida)
+
+                    # avaliando o modelo
+                    acuracia = avaliacao_modelo(y_test, y_pred)
+
+                    num_partidas = 5
+
+                    df_concatenado_time_casa, df_concatenado_time_fora, df_resultados_confrontos_diretos, df_info_confrontos_diretos, _, _, total_partidas = tabela_resultados_medias(partidas_anteriores, time_casa_widget, time_fora_widget, multi_target_rfc, le, num_partidas, arbitro_widget)
+                    if total_partidas != 0:
+                      tabela, legenda = gerar_tabela(time_casa_widget, time_fora_widget, arbitro_widget, multi_target_rfc, le, partidas_anteriores, acuracia)
+                      df_tabela, df_legenda, df_casa, df_fora, df_res, df_inf = estilizar_df(df_concatenado_time_casa, df_concatenado_time_fora, df_resultados_confrontos_diretos, df_info_confrontos_diretos, time_casa_widget, time_fora_widget, tabela, legenda)
+                      st.header("Previsões para a partida")
+                      st.subheader(f"{time_casa_widget} x {time_fora_widget}")
+                      st.write(f"Árbitro: {arbitro_widget}")
+                      st.write(f"Data da partida: {data_widget}")
+
+                      st.write(df_tabela)
+
+                      st.write(df_casa)
+                      st.write(df_fora)
+                      st.write(df_res)
+                      st.write(df_inf)
+
+                except ValueError:
+                    st.error("Data inválida. Por favor, selecione outra data.")
 
 if __name__ == '__main__':
     main()
