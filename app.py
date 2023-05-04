@@ -201,8 +201,12 @@ def df_completo_partidas_casa_fora(partidas_df):
         'media_posse_de_bola_fora': row['media_posse_bola_fora']
       }
 
-      # adicionando o dicionário ao dataframe de médias
-      df_partidas_casa_fora_1 = df_partidas_casa_fora_1.append(novas_colunas_1, ignore_index=True)
+      # criando um novo DataFrame com as novas colunas
+      novas_colunas_1_df = pd.DataFrame(novas_colunas_1, index=[0])
+
+      # concatenando com o DataFrame original
+      df_partidas_casa_fora_1 = pd.concat([df_partidas_casa_fora_1, novas_colunas_1_df], ignore_index=True)
+
 
   # Criando colunas de resultados que serão as variáveis target do algoritmo de Machine Learning
   df_partidas_casa_fora_1['resultado_partida'] = df_partidas_casa_fora_1.apply(lambda row: 'casa' if row['gols_time_casa'] > row['gols_time_fora'] else ('fora' if row['gols_time_casa'] < row['gols_time_fora'] else 'empate'), axis=1)
