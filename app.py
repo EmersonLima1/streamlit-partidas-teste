@@ -43,7 +43,7 @@ warnings.filterwarnings("ignore")
 
 def importacao_dados_ml():
   # lendo arquivo com as informações das partidas
-  partidas_df = pd.read_csv('/content/england-premier-league-matches-2018-to-2019-stats.csv')
+  partidas_df = pd.read_csv('https://github.com/EmersonLima1/streamlit-partidas-teste/blob/main/england-premier-league-matches-2018-to-2019-stats.csv')
   # criando nova coluna para data
   partidas_df['data'] =  pd.to_datetime(partidas_df['date_GMT'])
 
@@ -52,20 +52,6 @@ def importacao_dados_ml():
 # Método que gera o dataframe completo com as médias e os resultados das partidas.
 # Este método é usado no modelo de machine learning e para filtrar as últimas n partidas em casa e fora de casa dos times
 
-"""
-Função: O método df_completo_partidas_casa_fora recebe um DataFrame contendo dados de partidas de futebol
-agrupa os dados por time da casa e time visitante e retorna um DataFrame com as médias acumuladas de diversos
-indicadores para cada time (da casa e visitante) ao longo do tempo.
-
-Parâmetro: O método recebe um DataFrame chamado partidas_df que contém dados de partidas de futebol.
-
-Retorno: O método retorna dois novos DataFrame (df_partidas_casa_fora_2 e df_partidas_casa_fora_3), df_partidas_casa_fora_2 contém as médias acumuladas de diversos indicadores para cada time
-(da casa e visitante) ao longo do tempo. As médias incluem gols marcados, escanteios, cartões amarelos e vermelhos, chutes no gol,
-chutes fora do gol,faltas e posse de bola. Este DataFrame é utilizado para treinar o modelo de Machine Learning. 
-Já o df_partidas_casa_fora_3 contém apenas 6 colunas (time_casa, time_fora, arbitro, data_partida, gols_time_casa e gols_time_fora). Este DataFrame é utilizado
-quando se deseja apresentar como foram últimas n partidas do time da casa como mandante e do time de fora como visitante.
-
-"""
 def df_completo_partidas_casa_fora(partidas_df):
 
   partidas_df['date_GMT'] = pd.to_datetime(partidas_df['date_GMT'])
@@ -278,19 +264,6 @@ def df_completo_partidas_casa_fora(partidas_df):
 
 # Método que gera o dataframe com as médias e os resultados das partidas, porém esse método é relacionado a partidas em geral dos times
 
-"""
-Função: O método df_completo_partidas_gerais recebe um DataFrame contendo dados de partidas de futebol e
-atualiza as médias das estatísticas para cada um dos times envolvidos na partida.
-
-Parâmetro: O método recebe um DataFrame chamado partidas_df que contém dados de partidas de futebol.
-
-Retorno: O método retorna dois novos DataFrame (df_partidas_gerais_2 e df_partidas_gerais_3), df_partidas_gerais_2 contém as médias acumuladas
-de diversos indicadores para cada time (da casa e visitante) ao longo do tempo. As médias incluem gols marcados, escanteios, cartões amarelos e
-vermelhos, chutes no gol, chutes fora do gol,faltas e posse de bola. 
-Já o df_partidas_gerais_3 contém apenas 6 colunas (time_casa, time_fora, arbitro, data_partida, gols_time_casa e gols_time_fora). 
-Este DataFrame é utilizado quando se deseja apresentar como foram últimas n partidas dos times de modo geral (seja como mandante ou visitante).
-
-"""
 def df_completo_partidas_gerais(partidas_df):
 
   partidas_df['date_GMT'] = pd.to_datetime(partidas_df['date_GMT'])
@@ -685,17 +658,6 @@ def nova_previsao_partidas_casa_fora(ultimas_partidas_casa_fora, arbitro, time_c
 
 # Método que gera o dataframe que vai ser utilizado como nova previsão (confrontos diretos)
 
-"""
-Função: Com as informações dos confrontos diretos entre o time da casa e o time de fora, o método
-nova_previsao_direto cálcula as médias acumuladas de diversos indicadores para ambos os times nesses confrontos diretos. 
-
-Parâmetro: O método recebe um DataFrame chamado confrontos_diretos que contém dados dos confrontos diretos entre o time da casa e o time de fora.
-Além disso, o método também recebe uma variável que contém o nome do árbitro dessa partida futura.
-
-Retorno: O método retorna um DataFrame que contém uma única linha com as médias calculadas. 
-Esse DataFrame é utilizado como parâmetro no método que prever os resultados de novas partidas.
-
-"""
 def nova_previsao_direto(confrontos_diretos, arbitro, time_casa, time_fora):
 
   gols_do_time_da_casa_em_casa = 0
@@ -963,18 +925,6 @@ def nova_previsao_direto(confrontos_diretos, arbitro, time_casa, time_fora):
 
 # Método que gera o dataframe que vai ser utilizado como nova previsão (partidas gerais)
 
-"""
-Função: Com as informações das últimas n partidas de modo geral do time da casa e do time de fora, o método
-nova_previsao_direto cálcula as médias acumuladas de diversos indicadores para ambos os times nessas partidas. 
-
-Parâmetro: O método recebe um DataFrame chamado ultimas_n_partidas que contém dados das das últimas n partidas de modo geral do time da casa e
-do time de fora. Além disso, o método também recebe uma variável que contém o nome do árbitro dessa partida futura e uma váriavel que contém
-o número das últimas partidas entre os times que foram consideradas (3, 5 ou 10).
-
-Retorno: O método retorna um DataFrame que contém uma única linha com as médias calculadas. 
-Esse DataFrame é utilizado como parâmetro no método que prever os resultados de novas partidas.
-
-"""
 def nova_previsao_partidas_gerais(ultimas_n_partidas, arbitro, n_partidas, time_casa, time_fora):
 
   # selecionar o nome do time da casa e do visitante
@@ -1187,17 +1137,6 @@ def nova_previsao_partidas_gerais(ultimas_n_partidas, arbitro, n_partidas, time_
 
 # Método que gera o dataframe que vai ser utilizado como nova previsão (histórico do campeonato)
 
-"""
-Função: Esse método monta um DataFrame com as médias acumuladas de diversos indicadores de todas as partidas do time da casa como mandante
-e do time de fora com visitante, esse DataFrame é passado como parâmetro do método fazer_previsao.
-
-Parâmetro: o método recebe como parâmetro um DataFrame contendo todas as partidas do time da casa como mandante; um DataFrame contendo todas
-as partidas do time de fora como visitante; um objeto do tipo RandomForestClassifier utilizado para fazer previsões; e um objeto do tipo 
-LabelEncoder utilizado para codificar as variáveis categóricas.
-
-Retorno: O método retorna as previsões dos resultados da futura partida.
-
-"""
 def historico_campeonato(partidas_casa_time_casa_df1, partidas_fora_time_fora_df1, multi_target_rfc, le):
 
   df1_casa = nova_previsao_partidas_casa_fora(partidas_casa_time_casa_df1, arbitro)
@@ -2881,9 +2820,7 @@ def gerar_tabela(time_casa, time_fora, arbitro, multi_target_rfc, le, partidas_a
 
 # Interação com o usuário
 
-arquivo = st.file_uploader("Selecione o arquivo CSV com os dados", type="csv")
-if arquivo is not None:
-    partidas_df = pd.read_csv(arquivo)
+partidas_df = importacao_dados_ml()
 
 # salvando os nomes dos times da casa em uma lista para futura verificação
 times_da_casa = sorted(partidas_df['home_team_name'].unique())
