@@ -485,17 +485,6 @@ def df_completo_partidas_gerais(partidas_df):
 
 # Método que gera o dataframe que vai ser utilizado como nova previsão (partidas em casa e fora)
 
-"""
-Função: Com as informações das últimas n partidas do time da casa como mandante e do time de fora como visitante, o método
-nova_previsao_partidas_casa_fora cálcula as médias acumuladas de diversos indicadores para ambos os times nessas partidas. 
-
-Parâmetro: O método recebe um DataFrame chamado ultimas_partidas_casa_fora que contém dados das últimas n partidas do time da casa e do time de fora,
-como mandante e visitante, respectivamente. Além disso, o método também recebe uma variável que contém o nome do árbitro dessa partida futura.
-
-Retorno: O método retorna um DataFrame que contém uma única linha com as médias calculadas. 
-Esse DataFrame é utilizado como parâmetro no método que prever os resultados de novas partidas.
-
-"""
 def nova_previsao_partidas_casa_fora(ultimas_partidas_casa_fora, arbitro, time_casa, time_fora):
 
   # criar uma lista com todos os times presentes no dataset
@@ -2790,65 +2779,65 @@ if arquivo is not None:
     # salvando os nomes dos árbitros em uma lista para futura verificação
     arbitros = sorted(partidas_df['referee'].unique())
 
-num_partidas = 0
-
-def previsoes_clicked():
-
-    time_casa = st.selectbox('Time da casa:', options=times_da_casa)
-    time_fora = st.selectbox('Time de fora:', options=times_de_fora)
-    arbitro = st.selectbox('Árbitro:', options=arbitros)
-    data = st.date_input('Data da partida:')
-
-    if time_fora == time_casa:
-        st.error('O time visitante não pode ser o mesmo que o time mandante!')
-        return
-
-    try:
-        # Converte a data para o formato desejado
-        data_da_partida = data.strftime("%Y-%m-%d")
-
-        # gerando um dataframe com todas as partidas antes da data passada
-        data_partida = datetime.strptime(data_da_partida, '%Y-%m-%d').date()
-        partidas_anteriores = partidas_df[partidas_df['data'] < data_da_partida]
-
-        # treinando o modelo
-        multi_target_rfc, le, y_test, y_pred, df1_ml = modelo_ml(partidas_df, data_da_partida)
-
-        # avaliando o modelo
-        acuracia = avaliacao_modelo(y_test, y_pred)
-              
-        num_partidas = 5
-
-        df_concatenado_time_casa, df_concatenado_time_fora, df_resultados_confrontos_diretos, df_info_confrontos_diretos, time_casa_widget.value, time_fora_widget.value, total_partidas = tabela_resultados_medias(partidas_anteriores, time_casa_widget.value, time_fora_widget.value, multi_target_rfc, le, num_partidas, arbitro_widget.value)
-        if total_partidas != 0:
-          tabela, legenda = gerar_tabela(time_casa_widget.value, time_fora_widget.value, arbitro_widget.value, multi_target_rfc, le, partidas_anteriores, acuracia)
-          df_tabela, df_legenda, df_casa, df_fora, df_res, df_inf = estilizar_df(df_concatenado_time_casa, df_concatenado_time_fora, df_resultados_confrontos_diretos, df_info_confrontos_diretos, time_casa, time_fora, tabela, legenda)
-          st.dataframe(df_tabela)
-          st.dataframe(df_legenda)
-          st.dataframe(df_casa)
-          st.dataframe(df_fora)
-          st.dataframe(df_res)
-          st.dataframe(df_inf)
-        else:
-            st.warning('Não houve partidas jogadas entre o ' + str(time_casa) + ' e o ' + str(time_fora) + '!')
-    except ValueError:
-        st.error('Data inválida')
-
-def simular_nova_partida():
-    # Limpa a saída anterior
-    st.experimental_rerun()
-
-    # Limpa os componentes para simulação de nova partida
-    times_da_casa.clear()
-    times_de_fora.clear()
-    arbitros.clear()
     num_partidas = 0
 
-    # Redefine os widgets
-    time_casa_widget.value = ''
-    time_fora_widget.value = ''
-    arbitro_widget.value = ''
-    data_widget.value = ''
+    def previsoes_clicked():
+
+        time_casa = st.selectbox('Time da casa:', options=times_da_casa)
+        time_fora = st.selectbox('Time de fora:', options=times_de_fora)
+        arbitro = st.selectbox('Árbitro:', options=arbitros)
+        data = st.date_input('Data da partida:')
+
+        if time_fora == time_casa:
+            st.error('O time visitante não pode ser o mesmo que o time mandante!')
+            return
+
+        try:
+            # Converte a data para o formato desejado
+            data_da_partida = data.strftime("%Y-%m-%d")
+
+            # gerando um dataframe com todas as partidas antes da data passada
+            data_partida = datetime.strptime(data_da_partida, '%Y-%m-%d').date()
+            partidas_anteriores = partidas_df[partidas_df['data'] < data_da_partida]
+
+            # treinando o modelo
+            multi_target_rfc, le, y_test, y_pred, df1_ml = modelo_ml(partidas_df, data_da_partida)
+
+            # avaliando o modelo
+            acuracia = avaliacao_modelo(y_test, y_pred)
+                  
+            num_partidas = 5
+
+            df_concatenado_time_casa, df_concatenado_time_fora, df_resultados_confrontos_diretos, df_info_confrontos_diretos, time_casa_widget.value, time_fora_widget.value, total_partidas = tabela_resultados_medias(partidas_anteriores, time_casa_widget.value, time_fora_widget.value, multi_target_rfc, le, num_partidas, arbitro_widget.value)
+            if total_partidas != 0:
+              tabela, legenda = gerar_tabela(time_casa_widget.value, time_fora_widget.value, arbitro_widget.value, multi_target_rfc, le, partidas_anteriores, acuracia)
+              df_tabela, df_legenda, df_casa, df_fora, df_res, df_inf = estilizar_df(df_concatenado_time_casa, df_concatenado_time_fora, df_resultados_confrontos_diretos, df_info_confrontos_diretos, time_casa, time_fora, tabela, legenda)
+              st.dataframe(df_tabela)
+              st.dataframe(df_legenda)
+              st.dataframe(df_casa)
+              st.dataframe(df_fora)
+              st.dataframe(df_res)
+              st.dataframe(df_inf)
+            else:
+                st.warning('Não houve partidas jogadas entre o ' + str(time_casa) + ' e o ' + str(time_fora) + '!')
+        except ValueError:
+            st.error('Data inválida')
+
+    def simular_nova_partida():
+        # Limpa a saída anterior
+        st.experimental_rerun()
+
+        # Limpa os componentes para simulação de nova partida
+        times_da_casa.clear()
+        times_de_fora.clear()
+        arbitros.clear()
+        num_partidas = 0
+
+        # Redefine os widgets
+        time_casa_widget.value = ''
+        time_fora_widget.value = ''
+        arbitro_widget.value = ''
+        data_widget.value = ''
 
 
 def main():
