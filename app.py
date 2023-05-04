@@ -39,16 +39,6 @@ import warnings
 # Ignorando todos os tipos de mensagens de aviso
 warnings.filterwarnings("ignore")
 
-# Importação do conjunto de dados
-
-def importacao_dados_ml():
-  # lendo arquivo com as informações das partidas
-  partidas_df = pd.read_csv('https://github.com/EmersonLima1/streamlit-partidas-teste/blob/main/england-premier-league-matches-2018-to-2019-stats.csv')
-  # criando nova coluna para data
-  partidas_df['data'] =  pd.to_datetime(partidas_df['date_GMT'])
-
-  return(partidas_df)
-
 # Método que gera o dataframe completo com as médias e os resultados das partidas.
 # Este método é usado no modelo de machine learning e para filtrar as últimas n partidas em casa e fora de casa dos times
 
@@ -2820,7 +2810,9 @@ def gerar_tabela(time_casa, time_fora, arbitro, multi_target_rfc, le, partidas_a
 
 # Interação com o usuário
 
-partidas_df = importacao_dados_ml()
+arquivo = st.file_uploader("Selecione o arquivo CSV com os dados", type="csv")
+if arquivo is not None:
+    partidas_df = pd.read_csv(arquivo)
 
 # salvando os nomes dos times da casa em uma lista para futura verificação
 times_da_casa = sorted(partidas_df['home_team_name'].unique())
