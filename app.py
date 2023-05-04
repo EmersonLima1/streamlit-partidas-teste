@@ -2773,6 +2773,8 @@ def main():
     if arquivo is not None:
         partidas_df = pd.read_csv(arquivo)
 
+        partidas_df['data'] =  pd.to_datetime(partidas_df['date_GMT'])
+
         # salvando os nomes dos times da casa em uma lista para futura verificação
         times_da_casa = sorted(partidas_df['home_team_name'].unique())
         # salvando os nomes dos times de fora em uma lista para futura verificação
