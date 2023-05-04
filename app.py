@@ -2777,12 +2777,12 @@ arquivo = st.file_uploader("Selecione o arquivo CSV com os dados", type="csv")
 if arquivo is not None:
     partidas_df = pd.read_csv(arquivo)
 
-# salvando os nomes dos times da casa em uma lista para futura verificação
-times_da_casa = sorted(partidas_df['home_team_name'].unique())
-# salvando os nomes dos times de fora em uma lista para futura verificação
-times_de_fora = sorted(partidas_df['away_team_name'].unique())
-# salvando os nomes dos árbitros em uma lista para futura verificação
-arbitros = sorted(partidas_df['referee'].unique())
+    # salvando os nomes dos times da casa em uma lista para futura verificação
+    times_da_casa = sorted(partidas_df['home_team_name'].unique())
+    # salvando os nomes dos times de fora em uma lista para futura verificação
+    times_de_fora = sorted(partidas_df['away_team_name'].unique())
+    # salvando os nomes dos árbitros em uma lista para futura verificação
+    arbitros = sorted(partidas_df['referee'].unique())
 
 num_partidas = 0
 
