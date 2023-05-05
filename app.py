@@ -1321,14 +1321,6 @@ def avaliacao_modelo(y_test, y_pred):
   accuracy_cartoes_primeiro = accuracy_score(y_test['resultado_num_cartoes_primeiro'], y_pred[:,10])
   accuracy_cartoes_segundo = accuracy_score(y_test['resultado_num_cartoes_segundo'], y_pred[:,11])
 
-  # criar dicionário com os valores das métricas
-  """data = {
-      'Acurácia': [f'{accuracy_partida:.2%}', f'{accuracy_intervalo:.2%}', f'{accuracy_num_gols_over_under:.2%}', f'{accuracy_ambas_equipes_marcaram:.2%}', f'{accuracy_cartoes_amarelos:.2%}', f'{accuracy_cartoes_vermelhos:.2%}', f'{accuracy_cartoes_totais:.2%}', f'{accuracy_ambas_equipes_cartoes:.2%}', f'{accuracy_ambos_tempos_cartoes:.2%}', f'{accuracy_escanteios:.2%}', f'{accuracy_cartoes_primeiro:.2%}', f'{accuracy_cartoes_segundo:.2%}'],
-      'Precisão': [f'{precision_partida:.2%}', f'{precision_intervalo:.2%}', f'{precision_num_gols_over_under:.2%}', f'{precision_ambas_equipes_marcaram:.2%}', f'{precision_cartoes_amarelos:.2%}', f'{precision_cartoes_vermelhos:.2%}', f'{precision_cartoes_totais:.2%}', f'{precision_ambas_equipes_cartoes:.2%}', f'{precision_ambos_tempos_cartoes:.2%}', f'{precision_escanteios:.2%}', f'{precision_cartoes_primeiro:.2%}', f'{precision_cartoes_segundo:.2%}'],
-      'Recall': [f'{recall_partida:.2%}', f'{recall_intervalo:.2%}', f'{recall_num_gols_over_under:.2%}', f'{recall_ambas_equipes_marcaram:.2%}', f'{recall_cartoes_amarelos:.2%}', f'{recall_cartoes_vermelhos:.2%}', f'{recall_cartoes_totais:.2%}', f'{recall_ambas_equipes_cartoes:.2%}', f'{recall_ambos_tempos_cartoes:.2%}', f'{recall_escanteios:.2%}', f'{recall_cartoes_primeiro:.2%}', f'{recall_cartoes_segundo:.2%}'],
-      'F1-Score': [f'{f1_partida:.2%}', f'{f1_intervalo:.2%}', f'{f1_num_gols_over_under:.2%}', f'{f1_ambas_equipes_marcaram:.2%}', f'{f1_cartoes_amarelos:.2%}', f'{f1_cartoes_vermelhos:.2%}', f'{f1_cartoes_totais:.2%}', f'{f1_ambas_equipes_cartoes:.2%}', f'{f1_ambos_tempos_cartoes:.2%}', f'{f1_escanteios:.2%}', f'{f1_cartoes_primeiro:.2%}', f'{f1_cartoes_segundo:.2%}']
-  }"""
-
   # dados do DataFrame
   data = {'Acurácia': [f'{accuracy_partida:.2%}', f'{accuracy_intervalo:.2%}', f'{accuracy_num_gols_over_under:.2%}', f'{accuracy_ambas_equipes_marcaram:.2%}', f'{accuracy_cartoes_amarelos:.2%}', f'{accuracy_cartoes_vermelhos:.2%}', f'{accuracy_cartoes_totais:.2%}', f'{accuracy_ambas_equipes_cartoes:.2%}', f'{accuracy_ambos_tempos_cartoes:.2%}', f'{accuracy_escanteios:.2%}', f'{accuracy_cartoes_primeiro:.2%}', f'{accuracy_cartoes_segundo:.2%}']}
 
@@ -2726,7 +2718,8 @@ def main():
 
     st.title('Previsão de resultados de futebol')
 
-    st.header("Selecione o arquivo CSV com os dados")
+    st.header("Selecione o arquivo CSV com os dados", {'font-size': '24px'})
+
     arquivo = st.file_uploader("", type="csv")
 
     if arquivo is not None:
@@ -2776,12 +2769,12 @@ def main():
                       st.write(f"Árbitro: {arbitro_widget}")
                       st.write(f"Data da partida: {data_widget}")
 
-                      st.write(df_tabela)
-                      st.write(df_legenda)
-                      st.write(df_casa)
-                      st.write(df_fora)
-                      st.write(df_res)
-                      st.write(df_inf)
+                      st.table(df_tabela)
+                      st.table(df_legenda)
+                      st.table(df_casa)
+                      st.table(df_fora)
+                      st.table(df_res)
+                      st.table(df_inf)
 
                 except ValueError:
                     st.error("Data inválida. Por favor, selecione outra data.")
