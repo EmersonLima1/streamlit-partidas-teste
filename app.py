@@ -2718,7 +2718,7 @@ def main():
 
     st.title('Previsão de resultados de futebol')
 
-    st.header("Selecione o arquivo CSV com os dados")
+    st.subheader("Selecione o arquivo CSV com os dados")
 
     arquivo = st.file_uploader("", type="csv")
 
