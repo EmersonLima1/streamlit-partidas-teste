@@ -2740,6 +2740,7 @@ def main():
         arbitro_widget = st.selectbox('Árbitro:', options=arbitros)
         data_widget = st.date_input('Data da partida:')
 
+        # Define as opções do multiselect
         opcoes = ['Padrão 1 - Confrontos diretos',
                   'Padrão 2 - Histórico do campeonato',
                   'Padrão 3 - Últimas 3 partidas em casa e últimas 3 partidas fora',
@@ -2749,7 +2750,16 @@ def main():
                   'Padrão 7 - Últimas 5 partidas de modo geral',
                   'Padrão 8 - Últimas 10 partidas de modo geral']
 
-        padroes_selecionados = st.multiselect('Selecione os padrões de análise:', options=opcoes)
+        # Define a variável do checkbox
+        considerar_todos = st.checkbox('Considerar todos os padrões')
+
+        # Verifica se o checkbox está marcado
+        if considerar_todos:
+            # Define a lista de padrões como sendo todos
+            padroes_selecionados = opcoes
+        else:
+            # Define a lista de padrões com base no multiselect
+            padroes_selecionados = st.multiselect('Selecione os padrões de análise:', options=opcoes)
 
         # Adicionando botões de ação
         if st.button('Gerar previsões'):
