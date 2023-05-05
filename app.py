@@ -2769,7 +2769,7 @@ def main():
                       st.write(f"Árbitro: {arbitro_widget}")
                       st.write(f"Data da partida: {data_widget}")
 
-                      st.write(df_tabela.render(), unsafe_allow_html=True)
+                      st.table(df_tabela)
                       st.table(df_legenda)
                       st.table(df_casa)
                       st.table(df_fora)
