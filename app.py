@@ -2761,7 +2761,7 @@ def gerar_tabela(time_casa, time_fora, arbitro, multi_target_rfc, le, partidas_a
     # Filtra apenas as colunas selecionadas
     df = df[[padrão for padrão in padroes_selecionados]]
 
-    return df
+    return df, legenda_df
 
 # Interação com o usuário
 
