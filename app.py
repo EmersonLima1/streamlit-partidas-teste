@@ -2364,7 +2364,7 @@ def fazer_previsao_tabela(df_para_previsao, multi_target_rfc, le):
 
 # Método que gera a tabela de previsões
 
-def gerar_tabela(time_casa, time_fora, arbitro, multi_target_rfc, le, partidas_anteriores, acuracia):
+def gerar_tabela(time_casa, time_fora, arbitro, multi_target_rfc, le, partidas_anteriores, acuracia, considerar_todos, padroes_selecionados):
 
   # agrupando as partidas por time da casa e time de fora
   grupos_casa = partidas_anteriores.groupby('home_team_name')
@@ -2709,7 +2709,59 @@ def gerar_tabela(time_casa, time_fora, arbitro, multi_target_rfc, le, partidas_a
 
   legenda_df = pd.DataFrame({'Código': codigos, 'Descrição': legenda})
 
-  return(df_acuracia, legenda_df)
+  if considerar_todos == True:
+
+    return(df_acuracia, legenda_df)
+  
+  else:
+
+    # Dicionário com os dataframes de cada padrão
+    tabelas = {'Padrão 1 - Confrontos diretos': tabela_padrao_1,
+           'Padrão 2 - Histórico do campeonato': tabela_padrao_2,
+           'Padrão 3 - Últimas 3 partidas em casa e últimas 3 partidas fora': tabela_padrao_3,
+           'Padrão 4 - Últimas 5 partidas em casa e últimas 5 partidas fora': tabela_padrao_4,
+           'Padrão 5 - Últimas 10 partidas em casa e últimas 10 partidas fora': tabela_padrao_5,
+           'Padrão 6 - Últimas 3 partidas de modo geral': tabela_padrao_6,
+           'Padrão 7 - Últimas 5 partidas de modo geral': tabela_padrao_7,
+           'Padrão 8 - Últimas 10 partidas de modo geral': tabela_padrao_8}
+
+    # Seleciona apenas os dataframes correspondentes aos padrões escolhidos pelo usuário
+    dataframes_selecionados = [tabelas[p] for p in padroes_selecionados]
+     
+    # inicializa a lista vazia
+    elementos_selecionados = []
+    for padrão in padroes_selecionados:
+        if padrão == 'Padrão 1 - Confrontos diretos':
+            elementos_selecionados.append(tabela_padrao_1[0])
+        elif padrão == 'Padrão 2 - Histórico do campeonato':
+            elementos_selecionados.append(tabela_padrao_2[0])
+        elif padrão == 'Padrão 3 - Últimas 3 partidas em casa e últimas 3 partidas fora':
+            elementos_selecionados.append(tabela_padrao_3[0])
+        elif padrão == 'Padrão 4 - Últimas 5 partidas em casa e últimas 5 partidas fora':
+            elementos_selecionados.append(tabela_padrao_4[0])
+        elif padrão == 'Padrão 5 - Últimas 10 partidas em casa e últimas 10 partidas fora':
+            elementos_selecionados.append(tabela_padrao_5[0])
+        elif padrão == 'Padrão 6 - Últimas 3 partidas de modo geral':
+            elementos_selecionados.append(tabela_padrao_6[0])
+        elif padrão == 'Padrão 7 - Últimas 5 partidas de modo geral':
+            elementos_selecionados.append(tabela_padrao_7[0])
+        elif padrão == 'Padrão 8 - Últimas 10 partidas de modo geral':
+            elementos_selecionados.append(tabela_padrao_8[0])
+
+    # Crie o dataframe a partir das listas selecionadas
+    df = pd.DataFrame(elementos_selecionados)
+    df.columns = ['Padrão 1 - Confrontos diretos', 'Padrão 2 - Histórico do campeonato',
+                  'Padrão 3 - Últimas 3 partidas em casa e últimas 3 partidas fora',
+                  'Padrão 4 - Últimas 5 partidas em casa e últimas 5 partidas fora',
+                  'Padrão 5 - Últimas 10 partidas em casa e últimas 10 partidas fora',
+                  'Padrão 6 - Últimas 3 partidas de modo geral',
+                  'Padrão 7 - Últimas 5 partidas de modo geral',
+                  'Padrão 8 - Últimas 10 partidas de modo geral']
+
+    # Filtra apenas as colunas selecionadas
+    df = df[[padrão for padrão in padroes_selecionados]]
+
+    return df
 
 # Interação com o usuário
 
@@ -2783,7 +2835,7 @@ def main():
 
                     df_concatenado_time_casa, df_concatenado_time_fora, df_resultados_confrontos_diretos, df_info_confrontos_diretos, _, _, total_partidas = tabela_resultados_medias(partidas_anteriores, time_casa_widget, time_fora_widget, multi_target_rfc, le, num_partidas, arbitro_widget)
                     if total_partidas != 0:
-                      tabela, legenda = gerar_tabela(time_casa_widget, time_fora_widget, arbitro_widget, multi_target_rfc, le, partidas_anteriores, acuracia)
+                      tabela, legenda = gerar_tabela(time_casa_widget, time_fora_widget, arbitro_widget, multi_target_rfc, le, partidas_anteriores, acuracia, considerar_todos, padroes_selecionados)
                       df_tabela, df_legenda, df_casa, df_fora, df_res, df_inf = estilizar_df(df_concatenado_time_casa, df_concatenado_time_fora, df_resultados_confrontos_diretos, df_info_confrontos_diretos, time_casa_widget, time_fora_widget, tabela, legenda)
                       st.header("Previsões para a partida")
                       st.subheader(f"{time_casa_widget} x {time_fora_widget}")
