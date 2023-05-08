@@ -3099,7 +3099,6 @@ def main():
                         st.table(df_inf)
                       else:
                         df = padroes_usuario(time_casa_widget, time_fora_widget, arbitro_widget, multi_target_rfc, le, partidas_anteriores, acuracia, padroes_selecionados)
-                        df = df.hide_index()
                         st.table(df)
 
                 except ValueError:
