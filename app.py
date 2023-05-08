@@ -1324,9 +1324,6 @@ def avaliacao_modelo(y_test, y_pred):
   # dados do DataFrame
   data = {'Acurácia': [f'{accuracy_partida:.2%}', f'{accuracy_intervalo:.2%}', f'{accuracy_num_gols_over_under:.2%}', f'{accuracy_ambas_equipes_marcaram:.2%}', f'{accuracy_cartoes_amarelos:.2%}', f'{accuracy_cartoes_vermelhos:.2%}', f'{accuracy_cartoes_totais:.2%}', f'{accuracy_ambas_equipes_cartoes:.2%}', f'{accuracy_ambos_tempos_cartoes:.2%}', f'{accuracy_escanteios:.2%}', f'{accuracy_cartoes_primeiro:.2%}', f'{accuracy_cartoes_segundo:.2%}']}
 
-  
-  data = {'Acurácia': [f'{accuracy_partida:.2%}', f'{accuracy_intervalo:.2%}', f'{accuracy_num_gols_over_under:.2%}', f'{accuracy_ambas_equipes_marcaram:.2%}', f'{accuracy_cartoes_amarelos:.2%}', f'{accuracy_cartoes_vermelhos:.2%}', f'{accuracy_cartoes_totais:.2%}', f'{accuracy_ambas_equipes_cartoes:.2%}', f'{accuracy_ambos_tempos_cartoes:.2%}', f'{accuracy_escanteios:.2%}', f'{accuracy_cartoes_primeiro:.2%}', f'{accuracy_cartoes_segundo:.2%}']}
-
   df_final = pd.DataFrame(data, columns=['Acurácia'])
 
   #print(tabulate(df_formatted, headers=['Variáveis-alvo', 'Acurácia', 'Precisão', 'Recall', 'F1-Score'], tablefmt='fancy_grid', numalign='center', stralign='center'))
@@ -3103,6 +3100,9 @@ def main():
 
                 except ValueError:
                     st.error("Data inválida. Por favor, selecione outra data.")
+
+        elif st.button('Padrões mais assertivos'):
+           st.write('Padrões')
 
 if __name__ == '__main__':
     main()
