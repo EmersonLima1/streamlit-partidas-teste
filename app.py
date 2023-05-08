@@ -2758,10 +2758,30 @@ def gerar_tabela(time_casa, time_fora, arbitro, multi_target_rfc, le, partidas_a
                   'Padrão 7 - Últimas 5 partidas de modo geral',
                   'Padrão 8 - Últimas 10 partidas de modo geral']
 
-    # Filtra apenas as colunas selecionadas
-    df = df[[padrão for padrão in padroes_selecionados]]
+    # Lista de novos elementos
+    new_cols = ['Resultado da partida', 'Resultado do intervalo', 'Número de gols over under', 'Ambas equipes marcaram',
+              'Número de cartões amarelos', 'Número de cartões vermelhos', 'Número de cartões totais',
+              'Ambas equipes receberam cartões', 'Cartões aconteceram em ambos os tempos', 'Número de escanteios',
+              'Número de cartões no primeiro tempo', 'Número de cartões no segundo tempo']
 
-    return (df, legenda_df)
+    # Adicionando as novas colunas no início do DataFrame
+    df.insert(0, 'Variáveis-alvo', new_cols)
+
+    df_acuracia = pd.concat([df, acuracia], axis=1)
+
+    # Filtra apenas as colunas selecionadas
+    df_acuracia = df_acuracia[[padrão for padrão in padroes_selecionados]]
+
+    legenda = ['Confrontos diretos', 
+           'Histórico do campeonato',
+           'Últimas 3 partidas em casa e últimas 3 partidas fora',
+           'Últimas 5 partidas em casa e últimas 5 partidas fora',
+           'Últimas 10 partidas em casa e últimas 10 partidas fora',
+           'Últimas 3 partidas de modo geral',
+           'Últimas 5 partidas de modo geral',
+           'Últimas 10 partidas de modo geral']
+
+    return (df_acuracia, legenda_df)
 
 # Interação com o usuário
 
