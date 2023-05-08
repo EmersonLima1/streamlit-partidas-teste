@@ -2941,8 +2941,66 @@ def padroes_usuario(time_casa, time_fora, arbitro, multi_target_rfc, le, partida
   
   # cria um novo dataframe apenas com as colunas selecionadas
   novo_df = df[padroes_selecionados]
+
+  # Define uma classe que herda de pd.DataFrame para criar um DataFrame customizado
+  class SubclassedDataFrame(pd.DataFrame):
+      
+      # Propriedade normal
+      _metadata = ['description']
+      
+      # Sobrescreve o construtor para sempre retornar uma instância da classe customizada
+      @property
+      def _constructor(self):
+          return SubclassedDataFrame
+      
+  # Define o DataFrame para as tabelas de previsões, e personaliza a formatação
+  data_novo_df = novo_df
+  df_novo = SubclassedDataFrame(data_novo_df)
+  title_df_novo = 'Previsões para {} e {}'.format(time_casa, time_fora)
+
+  # Define um estilo para a tabela usando os seletores e propriedades do CSS
+  df_novo = (df_novo.style
+        .set_caption(title_df_novo) # Define o título da tabela
+        .set_table_styles([{
+            'selector': 'caption', # Seletor CSS para o título da tabela
+            'props': [
+                ('color', '#FFFFFF'),
+                ('font-size', '18px'),
+                ('font-style', 'normal'),
+                ('font-weight', 'bold'),
+                ('text-align', 'center'),
+                ('background-color', '#126e51'),
+                ('border', '1px solid gray')
+            ]
+        },
+        {
+            'selector': 'th', # Seletor CSS para as células do cabeçalho
+            'props': [
+                ('background-color', '#126e51'),
+                ('color', 'black'),
+                ('font-size', '15px'),
+                ('font-weight', 'bold'),
+                ('text-align', 'center'),
+                ('border', '1px solid gray'),
+                ('white-space', 'pre-wrap')
+            ]
+        },
+        {
+            'selector': 'td', # Seletor CSS para as células de dados
+            'props': [
+                ('background-color', '#283734'),
+                ('color', 'white'),
+                ('font-size', '15px'),
+                ('font-weight', 'normal'),
+                ('text-align', 'center'),
+                ('border', '1px solid gray'),
+                ('white-space', 'pre-wrap')
+            ]
+        },
+        ])
+    )
   
-  return (novo_df)
+  return (df_novo)
 
 # Interação com o usuário
 
