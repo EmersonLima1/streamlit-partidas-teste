@@ -2939,7 +2939,10 @@ def padroes_usuario(time_casa, time_fora, arbitro, multi_target_rfc, le, partida
                 'Padrão 7 - Últimas 5 partidas de modo geral',
                 'Padrão 8 - Últimas 10 partidas de modo geral']
   
-  return (df)
+  # cria um novo dataframe apenas com as colunas selecionadas
+  novo_df = df[padroes_selecionados]
+  
+  return (novo_df)
 
 # Interação com o usuário
 
