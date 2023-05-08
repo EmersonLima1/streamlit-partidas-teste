@@ -2935,7 +2935,7 @@ def padroes_usuario(time_casa, time_fora, arbitro, multi_target_rfc, le, partida
   # Filtra apenas as colunas selecionadas
   df = df[[padrão for padrão in listas_selecionadas]]
 
-  return (df)
+  return (tabela_padrao_1)
 
 # Interação com o usuário
 
@@ -3024,7 +3024,8 @@ def main():
                         st.table(df_res)
                         st.table(df_inf)
                       else:
-                        st.write('Cheguei até aqui')
+                        df = padroes_usuario(time_casa_widget, time_fora_widget, arbitro_widget, multi_target_rfc, le, partidas_anteriores, acuracia, padroes_selecionados)
+                        st.table(df)
 
                 except ValueError:
                     st.error("Data inválida. Por favor, selecione outra data.")
