@@ -2942,6 +2942,15 @@ def padroes_usuario(time_casa, time_fora, arbitro, multi_target_rfc, le, partida
   # cria um novo dataframe apenas com as colunas selecionadas
   novo_df = df[padroes_selecionados]
 
+   # Lista de novos elementos
+  new_cols = ['Resultado da partida', 'Resultado do intervalo', 'Número de gols over under', 'Ambas equipes marcaram',
+              'Número de cartões amarelos', 'Número de cartões vermelhos', 'Número de cartões totais',
+              'Ambas equipes receberam cartões', 'Cartões aconteceram em ambos os tempos', 'Número de escanteios',
+              'Número de cartões no primeiro tempo', 'Número de cartões no segundo tempo']
+
+  # Adicionando as novas colunas no início do DataFrame
+  novo_df.insert(0, 'Variáveis-alvo', new_cols)
+
   # Define uma classe que herda de pd.DataFrame para criar um DataFrame customizado
   class SubclassedDataFrame(pd.DataFrame):
       
