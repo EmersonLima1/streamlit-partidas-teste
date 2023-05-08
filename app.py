@@ -2969,7 +2969,6 @@ def padroes_usuario(time_casa, time_fora, arbitro, multi_target_rfc, le, partida
 
   # Define um estilo para a tabela usando os seletores e propriedades do CSS
   df_novo = (df_novo.style
-        .set_caption(title_df_novo) # Define o título da tabela
         .set_table_styles([{
             'selector': 'caption', # Seletor CSS para o título da tabela
             'props': [
@@ -3007,8 +3006,9 @@ def padroes_usuario(time_casa, time_fora, arbitro, multi_target_rfc, le, partida
             ]
         },
         ])
+        .set_caption(title_df_novo) # Define o título da tabela
     )
-  
+
   return (df_novo)
 
 # Interação com o usuário
@@ -3099,6 +3099,7 @@ def main():
                         st.table(df_inf)
                       else:
                         df = padroes_usuario(time_casa_widget, time_fora_widget, arbitro_widget, multi_target_rfc, le, partidas_anteriores, acuracia, padroes_selecionados)
+                        df = df.hide_index()
                         st.table(df)
 
                 except ValueError:
