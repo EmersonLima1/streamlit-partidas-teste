@@ -2901,41 +2901,45 @@ def padroes_usuario(time_casa, time_fora, arbitro, multi_target_rfc, le, partida
   tabela_padrao_8 = ultimas_partidas_gerais_previsao_tabela(partidas_casa_time_casa_df1_padrao_8,partidas_casa_time_fora_df1_padrao_8,ultimas_n_partidas_padrao_8,num_partidas_10_geral,time_casa,time_fora, multi_target_rfc, le, arbitro)
   
   # inicializa as listas vazias
-  listas_selecionadas = padroes_selecionados # aqui você deve adicionar os padrões selecionados pelo usuário
-  elementos_selecionados = []
-  for padrão in listas_selecionadas:
-      if padrão == 'Padrão 1 - Confrontos diretos':
-          elementos_selecionados.append(tabela_padrao_1[0])
-      elif padrão == 'Padrão 2 - Histórico do campeonato':
-          elementos_selecionados.append(tabela_padrao_2[0])
-      elif padrão == 'Padrão 3 - Últimas 3 partidas em casa e últimas 3 partidas fora':
-          elementos_selecionados.append(tabela_padrao_3[0])
-      elif padrão == 'Padrão 4 - Últimas 5 partidas em casa e últimas 5 partidas fora':
-          elementos_selecionados.append(tabela_padrao_4[0])
-      elif padrão == 'Padrão 5 - Últimas 10 partidas em casa e últimas 10 partidas fora':
-          elementos_selecionados.append(tabela_padrao_5[0])
-      elif padrão == 'Padrão 6 - Últimas 3 partidas de modo geral':
-          elementos_selecionados.append(tabela_padrao_6[0])
-      elif padrão == 'Padrão 7 - Últimas 5 partidas de modo geral':
-          elementos_selecionados.append(tabela_padrao_7[0])
-      elif padrão == 'Padrão 8 - Últimas 10 partidas de modo geral':
-          elementos_selecionados.append(tabela_padrao_8[0])
+  elemento_1 = []
+  elemento_2 = []
+  elemento_3 = []
+  elemento_4 = []
+  elemento_5 = []
+  elemento_6 = []
+  elemento_7 = []
+  elemento_8 = []
 
-  # Crie o dataframe a partir das listas selecionadas
-  df = pd.DataFrame(elementos_selecionados)
-  df.columns = ['Padrão 1 - Confrontos diretos',
-                  'Padrão 2 - Histórico do campeonato',
-                  'Padrão 3 - Últimas 3 partidas em casa e últimas 3 partidas fora',
-                  'Padrão 4 - Últimas 5 partidas em casa e últimas 5 partidas fora',
-                  'Padrão 5 - Últimas 10 partidas em casa e últimas 10 partidas fora',
-                  'Padrão 6 - Últimas 3 partidas de modo geral',
-                  'Padrão 7 - Últimas 5 partidas de modo geral',
-                  'Padrão 8 - Últimas 10 partidas de modo geral']
+  # laço para percorrer cada elemento dos objetos
+  for i in range(12):
+      elemento_1.append(tabela_padrao_1[0][i])
+      elemento_2.append(tabela_padrao_2[0][i])
+      elemento_3.append(tabela_padrao_3[0][i])
+      elemento_4.append(tabela_padrao_4[0][i])
+      elemento_5.append(tabela_padrao_5[0][i])
+      elemento_6.append(tabela_padrao_6[0][i])
+      elemento_7.append(tabela_padrao_7[0][i])
+      elemento_8.append(tabela_padrao_8[0][i])
 
-  # Filtra apenas as colunas selecionadas
-  df = df[[padrão for padrão in listas_selecionadas]]
+  # Crie uma lista com todas as listas
+  todas_listas = [elemento_1, elemento_2, elemento_3, elemento_4, elemento_5, elemento_6, elemento_7, elemento_8]
 
-  return (tabela_padrao_1)
+  # Crie um dicionário com as listas e suas respectivas chaves
+  dicionario = {}
+  for i, lista in enumerate(todas_listas):
+      dicionario[f'elemento_{i+1}'] = lista
+
+  # Crie o dataframe a partir do dicionário
+  df = pd.DataFrame(dicionario)
+  df.columns = ['Padrão 1 - Confrontos diretos', 'Padrão 2 - Histórico do campeonato',
+                'Padrão 3 - Últimas 3 partidas em casa e últimas 3 partidas fora',
+                'Padrão 4 - Últimas 5 partidas em casa e últimas 5 partidas fora',
+                'Padrão 5 - Últimas 10 partidas em casa e últimas 10 partidas fora',
+                'Padrão 6 - Últimas 3 partidas de modo geral',
+                'Padrão 7 - Últimas 5 partidas de modo geral',
+                'Padrão 8 - Últimas 10 partidas de modo geral']
+  
+  return (df)
 
 # Interação com o usuário
 
