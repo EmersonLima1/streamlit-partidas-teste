@@ -2710,7 +2710,232 @@ def gerar_tabela(time_casa, time_fora, arbitro, multi_target_rfc, le, partidas_a
   legenda_df = pd.DataFrame({'Código': codigos, 'Descrição': legenda})
 
   return(df_acuracia, legenda_df)
+
+# Método quando o usuário especifíca quais padrões quer
+
+def padroes_usuario(time_casa, time_fora, arbitro, multi_target_rfc, le, partidas_anteriores, acuracia, padroes_selecionados):
+   
+   # agrupando as partidas por time da casa e time de fora
+  grupos_casa = partidas_anteriores.groupby('home_team_name')
+  grupos_fora = partidas_anteriores.groupby('away_team_name')
+
+  # salvando os nomes dos times da casa em uma lista para futura verificação
+  times_da_casa = partidas_anteriores['home_team_name'].unique()
+  # salvando os nomes dos times de fora em uma lista para futura verificação
+  times_de_fora = partidas_anteriores['away_team_name'].unique()
+  # salvando os nomes dos árbitros em uma lista para futura verificação
+  arbitros = partidas_anteriores['referee'].unique()
+
+  # criando um dataframe vazio que vai armazenar as últimas n partidas de cada time da casa
+  dataframe_time_casa = pd.DataFrame(columns=partidas_anteriores.columns)
+
+  # criando um dataframe vazio que vai armazenar as últimas n partidas de cada time de fora
+  dataframe_time_fora = pd.DataFrame(columns=partidas_anteriores.columns)
+
+  # número de partidas para o padrão 3, 4 e 5
+  num_partidas_3_casa_fora = 3
+  num_partidas_5_casa_fora = 5
+  num_partidas_10_casa_fora = 10
+
+  # número de partidas para o padrão 6, 7 e 8
+  num_partidas_3_geral = 3
+  num_partidas_5_geral = 5
+  num_partidas_10_geral = 10
+
+  # Padrão 1 - Confrontos Diretos
+  partidas_filtradas_padrao_1 = partidas_anteriores.loc[((partidas_anteriores['home_team_name'] == time_casa) & (partidas_anteriores['away_team_name'] == time_fora)) | ((partidas_anteriores['home_team_name'] == time_fora) & (partidas_anteriores['away_team_name'] == time_casa))]
+  df1_padrao_1, df2_padrao_1, df3_padrao_1 = df_completo_partidas_gerais(partidas_filtradas_padrao_1)
+  df4_padrao_1 = nova_previsao_direto(partidas_filtradas_padrao_1, arbitro, time_casa, time_fora)
+
+  tabela_padrao_1 = confrontos_diretos_previsao_tabela(df4_padrao_1, multi_target_rfc, le)
+
+  # Padrão 2 - Histórico no campeonato
+  for index, row in partidas_anteriores.iterrows():
+    partidas_casa_time_casa_df1_padrao_2 = partidas_anteriores[(partidas_anteriores['home_team_name'] == time_casa)]
+    partidas_casa_time_fora_df1_padrao_2 = partidas_anteriores[(partidas_anteriores['away_team_name'] == time_fora)]
+
+  tabela_padrao_2 = historico_campeonato_previsao_tabela(partidas_casa_time_casa_df1_padrao_2,partidas_casa_time_fora_df1_padrao_2, multi_target_rfc, le, arbitro, time_casa, time_fora)
+
+  # Padrão 3 - Últimas 3 partidas em casa e últimas 3 partidas fora de casa  
+  dataframe_time_casa_padrao_3 = pd.DataFrame()
+  dataframe_time_fora_padrao_3 = pd.DataFrame()
+
+  for time, grupo in grupos_casa:
+    ultimas_partidas_time_padrao_3 = grupo.sort_values('data').tail(num_partidas_3_casa_fora)
+    dataframe_time_casa_padrao_3 = pd.concat([dataframe_time_casa_padrao_3, ultimas_partidas_time_padrao_3])
+
+  for time, grupo in grupos_fora:
+    ultimas_partidas_time_padrao_3 = grupo.sort_values('data').tail(num_partidas_3_casa_fora)
+    dataframe_time_fora_padrao_3 = pd.concat([dataframe_time_fora_padrao_3, ultimas_partidas_time_padrao_3])
+
+  for index, row in partidas_anteriores.iterrows():
+    partidas_casa_time_casa_df1_padrao_3 = dataframe_time_casa_padrao_3[(dataframe_time_casa_padrao_3['home_team_name'] == time_casa)]
+    partidas_casa_time_fora_df1_padrao_3 = dataframe_time_fora_padrao_3[(dataframe_time_fora_padrao_3['away_team_name'] == time_fora)]
+
+    ultimas_n_partidas_padrao_3 = pd.concat([partidas_casa_time_casa_df1_padrao_3,partidas_casa_time_fora_df1_padrao_3])
+
+  tabela_padrao_3 =ultimas_partidas_casa_fora_previsao_tabela(partidas_casa_time_casa_df1_padrao_3,partidas_casa_time_fora_df1_padrao_3,ultimas_n_partidas_padrao_3,num_partidas_3_casa_fora,time_casa,time_fora, multi_target_rfc, le, arbitro)
+
+  # Padrão 4 - Últimas 5 partidas em casa e últimas 5 partidas fora de casa
+  dataframe_time_casa_padrao_4 = pd.DataFrame()
+  dataframe_time_fora_padrao_4 = pd.DataFrame()
+
+  for time, grupo in grupos_casa:
+    ultimas_partidas_time_padrao_4 = grupo.sort_values('data').tail(num_partidas_5_casa_fora)
+    dataframe_time_casa_padrao_4 = pd.concat([dataframe_time_casa_padrao_4, ultimas_partidas_time_padrao_4])
+
+  for time, grupo in grupos_fora:
+    ultimas_partidas_time_padrao_4 = grupo.sort_values('data').tail(num_partidas_5_casa_fora)
+    dataframe_time_fora_padrao_4 = pd.concat([dataframe_time_fora_padrao_4, ultimas_partidas_time_padrao_4])
+
+  for index, row in partidas_anteriores.iterrows():
+    partidas_casa_time_casa_df1_padrao_4 = dataframe_time_casa_padrao_4[(dataframe_time_casa_padrao_4['home_team_name'] == time_casa)]
+    partidas_casa_time_fora_df1_padrao_4 = dataframe_time_fora_padrao_4[(dataframe_time_fora_padrao_4['away_team_name'] == time_fora)]
+
+    ultimas_n_partidas_padrao_4 = pd.concat([partidas_casa_time_casa_df1_padrao_4,partidas_casa_time_fora_df1_padrao_4])
+
+  tabela_padrao_4 = ultimas_partidas_casa_fora_previsao_tabela(partidas_casa_time_casa_df1_padrao_4,partidas_casa_time_fora_df1_padrao_4,ultimas_n_partidas_padrao_4,num_partidas_5_casa_fora,time_casa,time_fora, multi_target_rfc, le, arbitro)
+
+  # Padrão 5 - Últimas 10 partidas em casa e últimas 10 partidas fora de casa
+  dataframe_time_casa_padrao_5 = pd.DataFrame()
+  dataframe_time_fora_padrao_5 = pd.DataFrame()
+
+  for time, grupo in grupos_casa:
+    ultimas_partidas_time_padrao_5 = grupo.sort_values('data').tail(num_partidas_10_casa_fora)
+    dataframe_time_casa_padrao_5 = pd.concat([dataframe_time_casa_padrao_5, ultimas_partidas_time_padrao_5])
+
+  for time, grupo in grupos_fora:
+    ultimas_partidas_time_padrao_5 = grupo.sort_values('data').tail(num_partidas_10_casa_fora)
+    dataframe_time_fora_padrao_5 = pd.concat([dataframe_time_fora_padrao_5, ultimas_partidas_time_padrao_5])
+
+  for index, row in partidas_anteriores.iterrows():
+    partidas_casa_time_casa_df1_padrao_5 = dataframe_time_casa_padrao_5[(dataframe_time_casa_padrao_5['home_team_name'] == time_casa)]
+    partidas_casa_time_fora_df1_padrao_5 = dataframe_time_fora_padrao_5[(dataframe_time_fora_padrao_5['away_team_name'] == time_fora)]
+
+    ultimas_n_partidas_padrao_5 = pd.concat([partidas_casa_time_casa_df1_padrao_5,partidas_casa_time_fora_df1_padrao_5])
+
+  tabela_padrao_5 = ultimas_partidas_casa_fora_previsao_tabela(partidas_casa_time_casa_df1_padrao_5,partidas_casa_time_fora_df1_padrao_5,ultimas_n_partidas_padrao_5,num_partidas_10_casa_fora,time_casa,time_fora, multi_target_rfc, le, arbitro)
+
+  # Padrão 6 - Últimas 3 partidas de modo geral
+
+  # Criar um dataframe vazio para armazenar as últimas n partidas de cada time
+  df_ultimas_partidas_padrao_6 = pd.DataFrame()
+
+  # Iterar sobre cada time
+  for time in partidas_anteriores['home_team_name'].unique():
+      # Filtrar as partidas do time em questão
+      partidas_time_padrao_6 = partidas_anteriores[(partidas_anteriores['home_team_name'] == time) | (partidas_anteriores['away_team_name'] == time)]  
+      # Ordenar as partidas do time pela data em ordem decrescente e selecionar as últimas n partidas
+      ultimas_partidas_padrao_6 = partidas_time_padrao_6.sort_values(by='data', ascending=False).head(num_partidas_3_geral) 
+      # Adicionar as últimas n partidas do time ao dataframe final
+      df_ultimas_partidas_padrao_6 = pd.concat([df_ultimas_partidas_padrao_6, ultimas_partidas_padrao_6])
+
+  # Ajustar o índice do dataframe final
+  df_ultimas_partidas_padrao_6.reset_index(drop=True, inplace=True)
+
+  for index, row in df_ultimas_partidas_padrao_6.iterrows():
+    partidas_casa_time_casa_df1_padrao_6 = df_ultimas_partidas_padrao_6[(df_ultimas_partidas_padrao_6['home_team_name'] == time_casa) | (df_ultimas_partidas_padrao_6['away_team_name'] == time_casa)]
+    partidas_casa_time_fora_df1_padrao_6 = df_ultimas_partidas_padrao_6[(df_ultimas_partidas_padrao_6['home_team_name'] == time_fora) | (df_ultimas_partidas_padrao_6['away_team_name'] == time_fora)]
+
+    partidas_casa_time_casa_df1_padrao_6 = partidas_casa_time_casa_df1_padrao_6.drop(partidas_casa_time_casa_df1_padrao_6.index[num_partidas_3_geral:])
+    partidas_casa_time_fora_df1_padrao_6 = partidas_casa_time_fora_df1_padrao_6.drop(partidas_casa_time_fora_df1_padrao_6.index[:num_partidas_3_geral])
+
+    ultimas_n_partidas_padrao_6 = pd.concat([partidas_casa_time_casa_df1_padrao_6,partidas_casa_time_fora_df1_padrao_6])
+
+  tabela_padrao_6 = ultimas_partidas_gerais_previsao_tabela(partidas_casa_time_casa_df1_padrao_6,partidas_casa_time_fora_df1_padrao_6,ultimas_n_partidas_padrao_6,num_partidas_3_geral,time_casa,time_fora, multi_target_rfc, le, arbitro)
+
+  # Padrão 7 - Últimas 5 partidas de modo geral
+
+  # Criar um dataframe vazio para armazenar as últimas n partidas de cada time
+  df_ultimas_partidas_padrao_7 = pd.DataFrame()
+
+  # Iterar sobre cada time
+  for time in partidas_anteriores['home_team_name'].unique():
+      # Filtrar as partidas do time em questão
+      partidas_time_padrao_7 = partidas_anteriores[(partidas_anteriores['home_team_name'] == time) | (partidas_anteriores['away_team_name'] == time)]  
+      # Ordenar as partidas do time pela data em ordem decrescente e selecionar as últimas n partidas
+      ultimas_partidas_padrao_7 = partidas_time_padrao_7.sort_values(by='data', ascending=False).head(num_partidas_5_geral) 
+      # Adicionar as últimas n partidas do time ao dataframe final
+      df_ultimas_partidas_padrao_7 = pd.concat([df_ultimas_partidas_padrao_7, ultimas_partidas_padrao_7])
+
+  # Ajustar o índice do dataframe final
+  df_ultimas_partidas_padrao_7.reset_index(drop=True, inplace=True)
+
+  for index, row in df_ultimas_partidas_padrao_7.iterrows():
+    partidas_casa_time_casa_df1_padrao_7 = df_ultimas_partidas_padrao_7[(df_ultimas_partidas_padrao_7['home_team_name'] == time_casa) | (df_ultimas_partidas_padrao_7['away_team_name'] == time_casa)]
+    partidas_casa_time_fora_df1_padrao_7 = df_ultimas_partidas_padrao_7[(df_ultimas_partidas_padrao_7['home_team_name'] == time_fora) | (df_ultimas_partidas_padrao_7['away_team_name'] == time_fora)]
+
+    partidas_casa_time_casa_df1_padrao_7 = partidas_casa_time_casa_df1_padrao_7.drop(partidas_casa_time_casa_df1_padrao_7.index[num_partidas_5_geral:])
+    partidas_casa_time_fora_df1_padrao_7 = partidas_casa_time_fora_df1_padrao_7.drop(partidas_casa_time_fora_df1_padrao_7.index[:num_partidas_5_geral])
+
+    ultimas_n_partidas_padrao_7 = pd.concat([partidas_casa_time_casa_df1_padrao_7,partidas_casa_time_fora_df1_padrao_7])
+
+  tabela_padrao_7 = ultimas_partidas_gerais_previsao_tabela(partidas_casa_time_casa_df1_padrao_7,partidas_casa_time_fora_df1_padrao_7,ultimas_n_partidas_padrao_7,num_partidas_5_geral,time_casa,time_fora, multi_target_rfc, le, arbitro)
+
+  # Padrão 8 - Últimas 10 partidas de modo geral
+
+  # Criar um dataframe vazio para armazenar as últimas n partidas de cada time
+  df_ultimas_partidas_padrao_8 = pd.DataFrame()
+
+  # Iterar sobre cada time
+  for time in partidas_anteriores['home_team_name'].unique():
+      # Filtrar as partidas do time em questão
+      partidas_time_padrao_8 = partidas_anteriores[(partidas_anteriores['home_team_name'] == time) | (partidas_anteriores['away_team_name'] == time)]  
+      # Ordenar as partidas do time pela data em ordem decrescente e selecionar as últimas n partidas
+      ultimas_partidas_padrao_8 = partidas_time_padrao_8.sort_values(by='data', ascending=False).head(num_partidas_10_geral) 
+      # Adicionar as últimas n partidas do time ao dataframe final
+      df_ultimas_partidas_padrao_8 = pd.concat([df_ultimas_partidas_padrao_8, ultimas_partidas_padrao_8])
+
+  # Ajustar o índice do dataframe final
+  df_ultimas_partidas_padrao_8.reset_index(drop=True, inplace=True)
+
+  for index, row in df_ultimas_partidas_padrao_8.iterrows():
+    partidas_casa_time_casa_df1_padrao_8 = df_ultimas_partidas_padrao_8[(df_ultimas_partidas_padrao_8['home_team_name'] == time_casa) | (df_ultimas_partidas_padrao_8['away_team_name'] == time_casa)]
+    partidas_casa_time_fora_df1_padrao_8 = df_ultimas_partidas_padrao_8[(df_ultimas_partidas_padrao_8['home_team_name'] == time_fora) | (df_ultimas_partidas_padrao_8['away_team_name'] == time_fora)]
+
+    partidas_casa_time_casa_df1_padrao_8 = partidas_casa_time_casa_df1_padrao_8.drop(partidas_casa_time_casa_df1_padrao_8.index[num_partidas_10_geral:])
+    partidas_casa_time_fora_df1_padrao_8 = partidas_casa_time_fora_df1_padrao_8.drop(partidas_casa_time_fora_df1_padrao_8.index[:num_partidas_10_geral])
+
+    ultimas_n_partidas_padrao_8 = pd.concat([partidas_casa_time_casa_df1_padrao_8,partidas_casa_time_fora_df1_padrao_8])
+
+  tabela_padrao_8 = ultimas_partidas_gerais_previsao_tabela(partidas_casa_time_casa_df1_padrao_8,partidas_casa_time_fora_df1_padrao_8,ultimas_n_partidas_padrao_8,num_partidas_10_geral,time_casa,time_fora, multi_target_rfc, le, arbitro)
   
+  # inicializa as listas vazias
+  listas_selecionadas = padroes_selecionados # aqui você deve adicionar os padrões selecionados pelo usuário
+  elementos_selecionados = []
+  for padrão in listas_selecionadas:
+      if padrão == 'Padrão 1 - Confrontos diretos':
+          elementos_selecionados.append(tabela_padrao_1[0])
+      elif padrão == 'Padrão 2 - Histórico do campeonato':
+          elementos_selecionados.append(tabela_padrao_2[0])
+      elif padrão == 'Padrão 3 - Últimas 3 partidas em casa e últimas 3 partidas fora':
+          elementos_selecionados.append(tabela_padrao_3[0])
+      elif padrão == 'Padrão 4 - Últimas 5 partidas em casa e últimas 5 partidas fora':
+          elementos_selecionados.append(tabela_padrao_4[0])
+      elif padrão == 'Padrão 5 - Últimas 10 partidas em casa e últimas 10 partidas fora':
+          elementos_selecionados.append(tabela_padrao_5[0])
+      elif padrão == 'Padrão 6 - Últimas 3 partidas de modo geral':
+          elementos_selecionados.append(tabela_padrao_6[0])
+      elif padrão == 'Padrão 7 - Últimas 5 partidas de modo geral':
+          elementos_selecionados.append(tabela_padrao_7[0])
+      elif padrão == 'Padrão 8 - Últimas 10 partidas de modo geral':
+          elementos_selecionados.append(tabela_padrao_8[0])
+
+  # Crie o dataframe a partir das listas selecionadas
+  df = pd.DataFrame(elementos_selecionados)
+  df.columns = ['Padrão 1 - Confrontos diretos', 'Padrão 2 - Histórico do campeonato',
+                'Padrão 3 - Últimas 3 partidas em casa e últimas 3 partidas fora',
+                'Padrão 4 - Últimas 5 partidas em casa e últimas 5 partidas fora',
+                'Padrão 5 - Últimas 10 partidas em casa e últimas 10 partidas fora',
+                'Padrão 6 - Últimas 3 partidas de modo geral',
+                'Padrão 7 - Últimas 5 partidas de modo geral',
+                'Padrão 8 - Últimas 10 partidas de modo geral']
+
+  # Filtra apenas as colunas selecionadas
+  df = df[[padrão for padrão in listas_selecionadas]]
+
+  return (df)
+
 # Interação com o usuário
 
 def main():
@@ -2797,6 +3022,8 @@ def main():
                         st.table(df_fora)
                         st.table(df_res)
                         st.table(df_inf)
+                      else:
+                         padroes_usuario(time_casa_widget, time_fora_widget, arbitro_widget, multi_target_rfc, le, partidas_anteriores, acuracia, padroes_selecionados)
 
                 except ValueError:
                     st.error("Data inválida. Por favor, selecione outra data.")
