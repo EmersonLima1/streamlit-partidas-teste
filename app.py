@@ -2923,13 +2923,14 @@ def padroes_usuario(time_casa, time_fora, arbitro, multi_target_rfc, le, partida
 
   # Crie o dataframe a partir das listas selecionadas
   df = pd.DataFrame(elementos_selecionados)
-  df.columns = ['Padrão 1 - Confrontos diretos', 'Padrão 2 - Histórico do campeonato',
-                'Padrão 3 - Últimas 3 partidas em casa e últimas 3 partidas fora',
-                'Padrão 4 - Últimas 5 partidas em casa e últimas 5 partidas fora',
-                'Padrão 5 - Últimas 10 partidas em casa e últimas 10 partidas fora',
-                'Padrão 6 - Últimas 3 partidas de modo geral',
-                'Padrão 7 - Últimas 5 partidas de modo geral',
-                'Padrão 8 - Últimas 10 partidas de modo geral']
+  df.columns = ['Padrão 1 - Confrontos diretos',
+                  'Padrão 2 - Histórico do campeonato',
+                  'Padrão 3 - Últimas 3 partidas em casa e últimas 3 partidas fora',
+                  'Padrão 4 - Últimas 5 partidas em casa e últimas 5 partidas fora',
+                  'Padrão 5 - Últimas 10 partidas em casa e últimas 10 partidas fora',
+                  'Padrão 6 - Últimas 3 partidas de modo geral',
+                  'Padrão 7 - Últimas 5 partidas de modo geral',
+                  'Padrão 8 - Últimas 10 partidas de modo geral']
 
   # Filtra apenas as colunas selecionadas
   df = df[[padrão for padrão in listas_selecionadas]]
@@ -3023,7 +3024,8 @@ def main():
                         st.table(df_res)
                         st.table(df_inf)
                       else:
-                         padroes_usuario(time_casa_widget, time_fora_widget, arbitro_widget, multi_target_rfc, le, partidas_anteriores, acuracia, padroes_selecionados)
+                        df = padroes_usuario(time_casa_widget, time_fora_widget, arbitro_widget, multi_target_rfc, le, partidas_anteriores, acuracia, padroes_selecionados)
+                        st.table(df)
 
                 except ValueError:
                     st.error("Data inválida. Por favor, selecione outra data.")
