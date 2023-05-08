@@ -3096,7 +3096,17 @@ def main():
                         st.table(df_inf)
                       else:
                         df = padroes_usuario(time_casa_widget, time_fora_widget, arbitro_widget, multi_target_rfc, le, partidas_anteriores, acuracia, padroes_selecionados)
+                        _, _, df_casa, df_fora, df_res, df_inf = estilizar_df(df_concatenado_time_casa, df_concatenado_time_fora, df_resultados_confrontos_diretos, df_info_confrontos_diretos, time_casa_widget, time_fora_widget, tabela, legenda)
+                        st.header("Previsões para a partida")
+                        st.subheader(f"{time_casa_widget} x {time_fora_widget}")
+                        st.write(f"Árbitro: {arbitro_widget}")
+                        st.write(f"Data da partida: {data_widget}")
+                        
                         st.table(df)
+                        st.table(df_casa)
+                        st.table(df_fora)
+                        st.table(df_res)
+                        st.table(df_inf)
 
                 except ValueError:
                     st.error("Data inválida. Por favor, selecione outra data.")
