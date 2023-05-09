@@ -3017,6 +3017,8 @@ def main():
 
     st.subheader("Selecione o arquivo CSV com os dados")
 
+    col1, col2 = st.beta_columns(2)
+
     arquivo = st.file_uploader("", type="csv")
 
     if arquivo is not None:
@@ -3058,6 +3060,7 @@ def main():
             # Define a lista de padrões com base no multiselect
             padroes_selecionados = st.multiselect('Selecione os padrões de análise:', options=opcoes)
 
+      with col1:  
         # Adicionando botões de ação
         if st.button('Gerar previsões'):
             if time_fora_widget == time_casa_widget:
@@ -3111,7 +3114,7 @@ def main():
 
                 except ValueError:
                     st.error("Data inválida. Por favor, selecione outra data.")
-
+      with col2:
         elif st.button('Padrões mais assertivos'):
            st.write('Padrões')
 
