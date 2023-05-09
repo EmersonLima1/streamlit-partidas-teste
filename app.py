@@ -3112,7 +3112,7 @@ def main():
                 except ValueError:
                     st.error("Data inválida. Por favor, selecione outra data.")
         elif st.button('Padrões mais assertivos'):
-           st.write('Padrões')
+           st.write('Padrões padrões')
 
 if __name__ == '__main__':
     main()
