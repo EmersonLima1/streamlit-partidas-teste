@@ -2978,7 +2978,10 @@ def padroes_assertivos(partidas_df, data_da_partida):
   partidas_anteriores = partidas_df[partidas_df['data'] < data_da_partida]
 
   # treinando o modelo
-  multi_target_rfc, le, y_test, y_, df1_ml = modelo_ml(partidas_df, data_da_partida)
+  multi_target_rfc, le, y_test, y_pred, df1_ml = modelo_ml(partidas_df, data_da_partida)
+
+  # Passando o arquivo das partidas para o método df_completo
+  df1_ml, df2_ml, df3_ml = df_completo_partidas_casa_fora(partidas_df)
 
   # Convertendo a data de treino para o formato datetime e definindo o valor da data de treino
   data_treino = data_da_partida
@@ -2987,9 +2990,6 @@ def padroes_assertivos(partidas_df, data_da_partida):
   # Convertendo a data de teste para o formato datetime e definindo o valor da data de teste
   data_teste = data_da_partida
   data_teste = datetime.strptime(data_teste, '%Y-%m-%d').date()
-
-  # Passando o arquivo das partidas para o método df_completo
-  df1_ml, _ , _ = df_completo_partidas_casa_fora(partidas_df)
 
   # Selecionando as partidas anteriores a data da partida
   partidas_antes_da_data = df1_ml[df1_ml['data_partida'] < data_treino]
@@ -3009,6 +3009,10 @@ def padroes_assertivos(partidas_df, data_da_partida):
   # Criação de uma lista vazia para armazenar as listas das partidas
   lista_partidas = []
 
+  # agrupando as partidas por time da casa e time de fora
+  grupos_casa = partidas_anteriores.groupby('home_team_name')
+  grupos_fora = partidas_anteriores.groupby('away_team_name')
+
   # Itera sobre cada linha do DataFrame
   for index, row in partidas_proxima_rodada.iterrows():
       # Extrai as informações de cada linha
@@ -3021,10 +3025,6 @@ def padroes_assertivos(partidas_df, data_da_partida):
       
       # Adiciona a lista da partida à lista maior
       lista_partidas.append(partida)
-
-  # agrupando as partidas por time da casa e time de fora
-  grupos_casa = partidas_anteriores.groupby('home_team_name')
-  grupos_fora = partidas_anteriores.groupby('away_team_name')
 
   # número de partidas para o padrão 3, 4 e 5
   num_partidas_3_casa_fora = 3
