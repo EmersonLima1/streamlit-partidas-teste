@@ -2990,9 +2990,9 @@ def padroes_usuario(time_casa, time_fora, arbitro, multi_target_rfc, le, partida
 def main():
     st.set_page_config(page_title="InPES bet", page_icon=":soccer:")
 
-    st.title('Previsão de resultados de futebol')
+    st.title('**Previsão de resultados de futebol**')
 
-    st.subheader("Selecione o arquivo CSV com os dados")
+    st.subheader('**Selecione o arquivo csv com os dados das partidas de futebol**')
 
     arquivo = st.file_uploader("", type="csv")
 
@@ -3009,10 +3009,10 @@ def main():
         arbitros = sorted(partidas_df['referee'].unique())
 
         num_partidas = 0
-        time_casa_widget = st.selectbox('Time da casa:', options=times_da_casa)
-        time_fora_widget = st.selectbox('Time de fora:', options=times_de_fora)
-        arbitro_widget = st.selectbox('Árbitro:', options=arbitros)
-        data_widget = st.date_input('Data da partida:')
+        time_casa_widget = st.selectbox('**Time da casa:**', options=times_da_casa)
+        time_fora_widget = st.selectbox('**Time de fora:**', options=times_de_fora)
+        arbitro_widget = st.selectbox('**Árbitro:**', options=arbitros)
+        data_widget = st.date_input('**Data da partida:**')
 
         # Define as opções do multiselect
         opcoes = ['Padrão 1 - Confrontos diretos',
@@ -3025,7 +3025,7 @@ def main():
                   'Padrão 8 - Últimas 10 partidas de modo geral']
 
         # Define a variável do checkbox
-        considerar_todos = st.checkbox('Considerar todos os padrões')
+        considerar_todos = st.checkbox('**Considerar todos os padrões**')
 
         # Verifica se o checkbox está marcado
         if considerar_todos:
@@ -3033,12 +3033,12 @@ def main():
             padroes_selecionados = opcoes
         else:
             # Define a lista de padrões com base no multiselect
-            padroes_selecionados = st.multiselect('Selecione os padrões de análise:', options=opcoes)
+            padroes_selecionados = st.multiselect('**Selecione os padrões de análise:**', options=opcoes)
  
         # Adicionando botões de ação
-        if st.button('Gerar previsões'):
+        if st.button('**Gerar previsões**'):
             if time_fora_widget == time_casa_widget:
-                st.error('O time visitante não pode ser o mesmo que o time mandante!')
+                st.error('**O time visitante não pode ser o mesmo que o time mandante!**')
             else:
                 try:
                     # Converte a data para o formato desejado
@@ -3060,43 +3060,44 @@ def main():
                       if considerar_todos == True:
                         tabela, legenda = gerar_tabela(time_casa_widget, time_fora_widget, arbitro_widget, multi_target_rfc, le, partidas_anteriores, acuracia)
                         df_tabela, df_legenda, df_casa, df_fora, df_res, df_inf = estilizar_df(df_concatenado_time_casa, df_concatenado_time_fora, df_resultados_confrontos_diretos, df_info_confrontos_diretos, time_casa_widget, time_fora_widget, tabela, legenda)
-                        st.header("Previsões para a partida")
+                        st.header('**Previsões para a partida**')
                         st.subheader(f"{time_casa_widget} x {time_fora_widget}")
-                        st.write(f"Árbitro: {arbitro_widget}")
-                        st.write(f"Data da partida: {data_widget}")
+                        st.write(f'**Árbitro: {arbitro_widget}**')
+                        st.write(f'**Data da partida: {data_widget}**')
 
                         st.table(df_tabela)
                         st.write('**Legenda dos Padrões**')
                         st.table(df_legenda)
-                        st.write('Últimos resultados do {}'.format(time_casa_widget))
+                        st.write('**Últimos resultados do {}**'.format(time_casa_widget))
                         st.table(df_casa)
-                        st.write('Últimos resultados do {}'.format(time_fora_widget))
+                        st.write('**Últimos resultados do {}**'.format(time_fora_widget))
                         st.table(df_fora)
-                        st.write('Confrontos diretos entre {} e {}'.format(time_casa_widget, time_fora_widget))
+                        st.write('**Confrontos diretos entre {} e {}**'.format(time_casa_widget, time_fora_widget))
                         st.table(df_res)
-                        st.write('Informações dos confrontos diretos entre {} e {}'.format(time_casa_widget, time_fora_widget))
+                        st.write('**Informações dos confrontos diretos entre {} e {}**'.format(time_casa_widget, time_fora_widget))
                         st.table(df_inf)
                       else:
                         df = padroes_usuario(time_casa_widget, time_fora_widget, arbitro_widget, multi_target_rfc, le, partidas_anteriores, acuracia, padroes_selecionados)
                         tabela, legenda = gerar_tabela(time_casa_widget, time_fora_widget, arbitro_widget, multi_target_rfc, le, partidas_anteriores, acuracia)
                         df_tabela, df_legenda, df_casa, df_fora, df_res, df_inf = estilizar_df(df_concatenado_time_casa, df_concatenado_time_fora, df_resultados_confrontos_diretos, df_info_confrontos_diretos, time_casa_widget, time_fora_widget, tabela, legenda)
-                        st.header("Previsões para a partida")
+                        st.header('**Previsões para a partida**')
                         st.subheader(f"{time_casa_widget} x {time_fora_widget}")
-                        st.write(f"Árbitro: {arbitro_widget}")
-                        st.write(f"Data da partida: {data_widget}")
+                        st.write(f'**Árbitro: {arbitro_widget}**')
+                        st.write(f'**Data da partida: {data_widget}**')
                         
                         st.table(df)
                         st.write('Últimos resultados do {}'.format(time_casa_widget))
+                        st.write('**Últimos resultados do {}**'.format(time_casa_widget))
                         st.table(df_casa)
-                        st.write('Últimos resultados do {}'.format(time_fora_widget))
+                        st.write('**Últimos resultados do {}**'.format(time_fora_widget))
                         st.table(df_fora)
-                        st.write('Confrontos diretos entre {} e {}'.format(time_casa_widget, time_fora_widget))
+                        st.write('**Confrontos diretos entre {} e {}**'.format(time_casa_widget, time_fora_widget))
                         st.table(df_res)
-                        st.write('Informações dos confrontos diretos entre {} e {}'.format(time_casa_widget, time_fora_widget))
+                        st.write('**Informações dos confrontos diretos entre {} e {}**'.format(time_casa_widget, time_fora_widget))
                         st.table(df_inf)
 
                 except ValueError:
-                    st.error("Data inválida. Por favor, selecione outra data.")
+                    st.error('**Data inválida. Por favor, selecione outra data.**')
 
 if __name__ == '__main__':
     main()
