@@ -3040,6 +3040,7 @@ def main():
  
         # Adicionando botões de ação
         if st.button('Gerar previsões'):
+            gerar_previsoes_executado = True
             if time_fora_widget == time_casa_widget:
                 st.error('O time visitante não pode ser o mesmo que o time mandante!')
             else:
