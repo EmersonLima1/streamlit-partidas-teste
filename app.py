@@ -3034,13 +3034,9 @@ def main():
         else:
             # Define a lista de padrões com base no multiselect
             padroes_selecionados = st.multiselect('Selecione os padrões de análise:', options=opcoes)
-
-        # Variável de controle para acompanhar o estado do botão "Gerar previsões"
-        gerar_previsoes_executado = False
  
         # Adicionando botões de ação
         if st.button('Gerar previsões'):
-            gerar_previsoes_executado = True
             if time_fora_widget == time_casa_widget:
                 st.error('O time visitante não pode ser o mesmo que o time mandante!')
             else:
@@ -3070,7 +3066,7 @@ def main():
                         st.write(f"Data da partida: {data_widget}")
 
                         st.table(df_tabela)
-                        st.write('Legenda dos Padrões')
+                        st.write('**Legenda dos Padrões**')
                         st.table(df_legenda)
                         st.write('Últimos resultados do {}'.format(time_casa_widget))
                         st.table(df_casa)
@@ -3101,12 +3097,6 @@ def main():
 
                 except ValueError:
                     st.error("Data inválida. Por favor, selecione outra data.")
-
-        if gerar_previsoes_executado and st.button('Padrões mais assertivos'):
-          output = st.empty()
-
-          # Resto do código para exibir padrões mais assertivos
-          output.write("Padrões mais assertivos")
 
 if __name__ == '__main__':
     main()
