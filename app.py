@@ -3034,6 +3034,9 @@ def main():
         else:
             # Define a lista de padrões com base no multiselect
             padroes_selecionados = st.multiselect('Selecione os padrões de análise:', options=opcoes)
+
+        # Variável de controle para acompanhar o estado do botão "Gerar previsões"
+        gerar_previsoes_executado = False
  
         # Adicionando botões de ação
         if st.button('Gerar previsões'):
@@ -3097,8 +3100,9 @@ def main():
 
                 except ValueError:
                     st.error("Data inválida. Por favor, selecione outra data.")
-        elif st.button('Padrões mais assertivos'):
-           st.write('Padrões padrões')
+
+        if gerar_previsoes_executado and st.button('Padrões mais assertivos'):
+           st.write('Padrões')
 
 if __name__ == '__main__':
     main()
