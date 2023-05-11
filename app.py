@@ -1451,12 +1451,9 @@ def estilizar_df(df_concatenado_time_casa, df_concatenado_time_fora, df_resultad
   data_fora = df_concatenado_time_fora
 
   df_fora = SubclassedDataFrame(data_fora)
-  title_fora = 'Últimos resultados do {}'.format(time_fora)
-  header = 'header'
 
   # Define um estilo para a tabela usando os seletores e propriedades do CSS
   df_fora = (df_fora.style
-        .set_caption(title_fora) # Define o título da tabela
         .set_table_styles([{
             'selector': 'caption', # Seletor CSS para o título da tabela
             'props': [
@@ -1531,15 +1528,8 @@ def estilizar_df(df_concatenado_time_casa, df_concatenado_time_fora, df_resultad
   # Cria uma nova instância de DataFrame personalizada, 'df_inf', passando 'data_inf' como parâmetro
   df_inf = SubclassedDataFrame(data_inf)
 
-  # Define o título da tabela de informações com base nos nomes dos times
-  title_inf = 'Informações dos confrontos diretos entre {} e {}'.format(time_casa, time_fora)
-
-  # Define o cabeçalho da tabela como 'header'
-  header = 'header'
-
   # Define o estilo da tabela de informações, aplicando as configurações de estilo para a caption, th e td
   df_inf = (df_inf.style
-            .set_caption(title_inf)
             .set_table_styles([{
                 'selector': 'caption',
                 'props': [
@@ -1603,15 +1593,8 @@ def estilizar_df(df_concatenado_time_casa, df_concatenado_time_fora, df_resultad
   # Cria uma nova instância de DataFrame personalizada, 'df_res', passando 'data_res' como parâmetro
   df_res = SubclassedDataFrame(data_res)
 
-  # Define o título da tabela de resultados com base nos nomes dos times
-  title_res = 'Confrontos diretos entre {} e {}'.format(time_casa, time_fora)
-
-  # Define o cabeçalho da tabela como 'header'
-  header = 'header'
-
   # Define o estilo da tabela de resultados, aplicando as configurações de estilo para a caption, th e td
   df_res = (df_res.style
-    .set_caption(title_res)
     .set_table_styles([{
         'selector': 'caption',
         'props': [
@@ -1655,11 +1638,9 @@ def estilizar_df(df_concatenado_time_casa, df_concatenado_time_fora, df_resultad
   # Define o DataFrame para as tabelas de previsões, e personaliza a formatação
   data_tabela = tabela
   df_tabela = SubclassedDataFrame(data_tabela)
-  title_tabela = 'Previsões para {} e {}'.format(time_casa, time_fora)
 
   # Define um estilo para a tabela usando os seletores e propriedades do CSS
   df_tabela = (df_tabela.style
-        .set_caption(title_tabela) # Define o título da tabela
         .set_table_styles([{
             'selector': 'caption', # Seletor CSS para o título da tabela
             'props': [
@@ -1702,11 +1683,9 @@ def estilizar_df(df_concatenado_time_casa, df_concatenado_time_fora, df_resultad
   # Define o DataFrame para as legendas, e personaliza a formatação
   data_legenda = legenda
   df_legenda = SubclassedDataFrame(data_legenda)
-  title_legenda = 'Legenda dos Padrões'
 
   # Define um estilo para a tabela usando os seletores e propriedades do CSS
   df_legenda = (df_legenda.style
-        .set_caption(title_legenda) # Define o título da tabela
         .set_table_styles([{
             'selector': 'caption', # Seletor CSS para o título da tabela
             'props': [
@@ -3087,11 +3066,15 @@ def main():
                         st.write(f"Data da partida: {data_widget}")
 
                         st.table(df_tabela)
+                        st.write('Legenda dos Padrões')
                         st.table(df_legenda)
                         st.write('Últimos resultados do {}'.format(time_casa_widget))
                         st.table(df_casa)
+                        st.write('Últimos resultados do {}'.format(time_fora_widget))
                         st.table(df_fora)
+                        st.write('Confrontos diretos entre {} e {}'.format(time_casa_widget, time_fora_widget))
                         st.table(df_res)
+                        st.write('Informações dos confrontos diretos entre {} e {}'.format(time_casa_widget, time_fora_widget))
                         st.table(df_inf)
                       else:
                         df = padroes_usuario(time_casa_widget, time_fora_widget, arbitro_widget, multi_target_rfc, le, partidas_anteriores, acuracia, padroes_selecionados)
@@ -3103,9 +3086,13 @@ def main():
                         st.write(f"Data da partida: {data_widget}")
                         
                         st.table(df)
+                        st.write('Últimos resultados do {}'.format(time_casa_widget))
                         st.table(df_casa)
+                        st.write('Últimos resultados do {}'.format(time_fora_widget))
                         st.table(df_fora)
+                        st.write('Confrontos diretos entre {} e {}'.format(time_casa_widget, time_fora_widget))
                         st.table(df_res)
+                        st.write('Informações dos confrontos diretos entre {} e {}'.format(time_casa_widget, time_fora_widget))
                         st.table(df_inf)
 
                 except ValueError:
