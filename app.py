@@ -3103,7 +3103,10 @@ def main():
                     st.error("Data inválida. Por favor, selecione outra data.")
 
         if gerar_previsoes_executado and st.button('Padrões mais assertivos'):
-           st.write('Padrões')
+          output = st.empty()
+
+          # Resto do código para exibir padrões mais assertivos
+          output.write("Padrões mais assertivos")
 
 if __name__ == '__main__':
     main()
