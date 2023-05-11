@@ -1377,11 +1377,9 @@ def estilizar_df(df_concatenado_time_casa, df_concatenado_time_fora, df_resultad
   # Define o DataFrame para os últimos resultados do time da casa, e personaliza a formatação
   data_casa = df_concatenado_time_casa
   df_casa = SubclassedDataFrame(data_casa)
-  title_casa = 'Últimos resultados do {}'.format(time_casa)
   
   # Define um estilo para a tabela usando os seletores e propriedades do CSS
   df_casa = (df_casa.style
-        .set_caption(title_casa) # Define o título da tabela
         .set_table_styles([{
             'selector': 'caption', # Seletor CSS para o título da tabela
             'props': [
@@ -3090,6 +3088,7 @@ def main():
 
                         st.table(df_tabela)
                         st.table(df_legenda)
+                        st.write('Últimos resultados do {}'.format(time_casa_widget))
                         st.table(df_casa)
                         st.table(df_fora)
                         st.table(df_res)
