@@ -2973,10 +2973,12 @@ def padroes_usuario(time_casa, time_fora, arbitro, multi_target_rfc, le, partida
 
 # Padrões mais assertivos
 
-def padroes_assertivos(partidas_df, data_da_partida, partidas_anteriores, multi_target_rfc, le, y_test):
+def padroes_assertivos(partidas_df, data_da_partida):
 
-  # Passando o arquivo das partidas para o método df_completo
-  df1_ml, df2_ml, df3_ml = df_completo_partidas_casa_fora(partidas_df)
+  partidas_anteriores = partidas_df[partidas_df['data'] < data_da_partida]
+
+  # treinando o modelo
+  multi_target_rfc, le, y_test, y_, df1_ml = modelo_ml(partidas_df, data_da_partida)
 
   # Convertendo a data de treino para o formato datetime e definindo o valor da data de treino
   data_treino = data_da_partida
@@ -2985,6 +2987,9 @@ def padroes_assertivos(partidas_df, data_da_partida, partidas_anteriores, multi_
   # Convertendo a data de teste para o formato datetime e definindo o valor da data de teste
   data_teste = data_da_partida
   data_teste = datetime.strptime(data_teste, '%Y-%m-%d').date()
+
+  # Passando o arquivo das partidas para o método df_completo
+  df1_ml, _ , _ = df_completo_partidas_casa_fora(partidas_df)
 
   # Selecionando as partidas anteriores a data da partida
   partidas_antes_da_data = df1_ml[df1_ml['data_partida'] < data_treino]
@@ -3484,7 +3489,7 @@ def main():
                       if considerar_todos == True:
                         tabela, legenda = gerar_tabela(time_casa_widget, time_fora_widget, arbitro_widget, multi_target_rfc, le, partidas_anteriores, acuracia)
                         df_tabela, df_legenda, df_casa, df_fora, df_res, df_inf = estilizar_df(df_concatenado_time_casa, df_concatenado_time_fora, df_resultados_confrontos_diretos, df_info_confrontos_diretos, time_casa_widget, time_fora_widget, tabela, legenda)
-                        df_final = padroes_assertivos(partidas_df, data_da_partida, partidas_anteriores, multi_target_rfc, le, y_test)
+                        df_final = padroes_assertivos(partidas_df, data_da_partida)
                         st.header('**Previsões para a partida**')
                         st.subheader(f"{time_casa_widget} x {time_fora_widget}")
                         st.write(f'**Árbitro: {arbitro_widget}**')
