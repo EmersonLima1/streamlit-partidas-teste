@@ -2973,12 +2973,12 @@ def padroes_usuario(time_casa, time_fora, arbitro, multi_target_rfc, le, partida
 
 # Padrões mais assertivos
 
-def padroes_assertivos(partidas_df, data_da_partida):
+def padroes_assertivos(partidas_df, data_da_partida, partidas_anteriores, multi_target_rfc, le, y_test):
 
-  partidas_anteriores = partidas_df[partidas_df['data'] < data_da_partida]
+  #partidas_anteriores = partidas_df[partidas_df['data'] < data_da_partida]
 
   # treinando o modelo
-  multi_target_rfc, le, y_test, y_pred, df1_ml = modelo_ml(partidas_df, data_da_partida)
+  #multi_target_rfc, le, y_test, y_pred, df1_ml = modelo_ml(partidas_df, data_da_partida)
 
   # Passando o arquivo das partidas para o método df_completo
   df1_ml, _, _ = df_completo_partidas_casa_fora(partidas_df)
@@ -3466,80 +3466,70 @@ def main():
  
         # Adicionando botões de ação
         if st.button('**Gerar previsões**'):
-          if time_fora_widget == time_casa_widget:
-            st.error('**O time visitante não pode ser o mesmo que o time mandante!**')
-          else:
-          # Verifica se todas as informações foram preenchidas corretamente
-            if time_casa_widget.value is None:
-              st.error('Selecione o time da casa.')
-            elif time_fora_widget.value is None:
-              st.error('Selecione o time de fora.')
-            elif arbitro_widget.value is None:
-              st.error('Selecione o árbitro.')
-            elif data_widget.value is None:
-              st.error('Selecione a data da partida.')
+            if time_fora_widget == time_casa_widget:
+                st.error('**O time visitante não pode ser o mesmo que o time mandante!**')
             else:
-              try:
-                # Converte a data para o formato desejado
-                data_da_partida = data_widget.strftime("%Y-%m-%d")
+                try:
+                    # Converte a data para o formato desejado
+                    data_da_partida = data_widget.strftime("%Y-%m-%d")
 
-                # gerando um dataframe com todas as partidas antes da data passada
-                partidas_anteriores = partidas_df[partidas_df['data'] < data_da_partida]
+                    # gerando um dataframe com todas as partidas antes da data passada
+                    partidas_anteriores = partidas_df[partidas_df['data'] < data_da_partida]
 
-                # treinando o modelo
-                multi_target_rfc, le, y_test, y_pred, _ = modelo_ml(partidas_df, data_da_partida)
+                    # treinando o modelo
+                    multi_target_rfc, le, y_test, y_pred, _ = modelo_ml(partidas_df, data_da_partida)
 
-                # avaliando o modelo
-                acuracia = avaliacao_modelo(y_test, y_pred)
+                    # avaliando o modelo
+                    acuracia = avaliacao_modelo(y_test, y_pred)
 
-                num_partidas = 5
+                    num_partidas = 5
 
-                df_concatenado_time_casa, df_concatenado_time_fora, df_resultados_confrontos_diretos, df_info_confrontos_diretos, _, _, total_partidas = tabela_resultados_medias(partidas_anteriores, time_casa_widget, time_fora_widget, multi_target_rfc, le, num_partidas, arbitro_widget)
-                if total_partidas != 0:
-                  if considerar_todos == True:
-                    tabela, legenda = gerar_tabela(time_casa_widget, time_fora_widget, arbitro_widget, multi_target_rfc, le, partidas_anteriores, acuracia)
-                    df_tabela, df_legenda, df_casa, df_fora, df_res, df_inf = estilizar_df(df_concatenado_time_casa, df_concatenado_time_fora, df_resultados_confrontos_diretos, df_info_confrontos_diretos, time_casa_widget, time_fora_widget, tabela, legenda)
-                    df_final = padroes_assertivos(partidas_df, data_da_partida)
-                    st.header('**Previsões para a partida**')
-                    st.subheader(f"{time_casa_widget} x {time_fora_widget}")
-                    st.write(f'**Árbitro: {arbitro_widget}**')
-                    st.write(f'**Data da partida: {data_da_partida}**')
+                    df_concatenado_time_casa, df_concatenado_time_fora, df_resultados_confrontos_diretos, df_info_confrontos_diretos, _, _, total_partidas = tabela_resultados_medias(partidas_anteriores, time_casa_widget, time_fora_widget, multi_target_rfc, le, num_partidas, arbitro_widget)
+                    if total_partidas != 0:
+                      if considerar_todos == True:
+                        tabela, legenda = gerar_tabela(time_casa_widget, time_fora_widget, arbitro_widget, multi_target_rfc, le, partidas_anteriores, acuracia)
+                        df_tabela, df_legenda, df_casa, df_fora, df_res, df_inf = estilizar_df(df_concatenado_time_casa, df_concatenado_time_fora, df_resultados_confrontos_diretos, df_info_confrontos_diretos, time_casa_widget, time_fora_widget, tabela, legenda)
+                        df_final = padroes_assertivos(partidas_df, data_da_partida, partidas_anteriores, multi_target_rfc, le, y_test)
+                        st.header('**Previsões para a partida**')
+                        st.subheader(f"{time_casa_widget} x {time_fora_widget}")
+                        st.write(f'**Árbitro: {arbitro_widget}**')
+                        st.write(f'**Data da partida: {data_da_partida}**')
 
-                    st.table(df_tabela)
-                    st.write('**Legenda dos Padrões**')
-                    st.table(df_legenda)
-                    st.write('**Últimos resultados do {}**'.format(time_casa_widget))
-                    st.table(df_casa)
-                    st.write('**Últimos resultados do {}**'.format(time_fora_widget))
-                    st.table(df_fora)
-                    st.write('**Confrontos diretos entre {} e {}**'.format(time_casa_widget, time_fora_widget))
-                    st.table(df_res)
-                    st.write('**Informações dos confrontos diretos entre {} e {}**'.format(time_casa_widget, time_fora_widget))
-                    st.table(df_inf)
-                    st.write('**Padrões e Acurácia**')
-                    st.table(df_final)
-                  else:
-                    df = padroes_usuario(time_casa_widget, time_fora_widget, arbitro_widget, multi_target_rfc, le, partidas_anteriores, acuracia, padroes_selecionados)
-                    tabela, legenda = gerar_tabela(time_casa_widget, time_fora_widget, arbitro_widget, multi_target_rfc, le, partidas_anteriores, acuracia)
-                    df_tabela, df_legenda, df_casa, df_fora, df_res, df_inf = estilizar_df(df_concatenado_time_casa, df_concatenado_time_fora, df_resultados_confrontos_diretos, df_info_confrontos_diretos, time_casa_widget, time_fora_widget, tabela, legenda)
-                    st.header('**Previsões para a partida**')
-                    st.subheader(f"{time_casa_widget} x {time_fora_widget}")
-                    st.write(f'**Árbitro: {arbitro_widget}**')
-                    st.write(f'**Data da partida: {data_widget}**')
-                    
-                    st.table(df)
-                    st.write('Últimos resultados do {}'.format(time_casa_widget))
-                    st.write('**Últimos resultados do {}**'.format(time_casa_widget))
-                    st.table(df_casa)
-                    st.write('**Últimos resultados do {}**'.format(time_fora_widget))
-                    st.table(df_fora)
-                    st.write('**Confrontos diretos entre {} e {}**'.format(time_casa_widget, time_fora_widget))
-                    st.table(df_res)
-                    st.write('**Informações dos confrontos diretos entre {} e {}**'.format(time_casa_widget, time_fora_widget))
-                    st.table(df_inf)
+                        st.table(df_tabela)
+                        st.write('**Legenda dos Padrões**')
+                        st.table(df_legenda)
+                        st.write('**Últimos resultados do {}**'.format(time_casa_widget))
+                        st.table(df_casa)
+                        st.write('**Últimos resultados do {}**'.format(time_fora_widget))
+                        st.table(df_fora)
+                        st.write('**Confrontos diretos entre {} e {}**'.format(time_casa_widget, time_fora_widget))
+                        st.table(df_res)
+                        st.write('**Informações dos confrontos diretos entre {} e {}**'.format(time_casa_widget, time_fora_widget))
+                        st.table(df_inf)
+                        st.write('**Padrões assertivos**')
+                        st.table(df_final)
+                      else:
+                        df = padroes_usuario(time_casa_widget, time_fora_widget, arbitro_widget, multi_target_rfc, le, partidas_anteriores, acuracia, padroes_selecionados)
+                        tabela, legenda = gerar_tabela(time_casa_widget, time_fora_widget, arbitro_widget, multi_target_rfc, le, partidas_anteriores, acuracia)
+                        df_tabela, df_legenda, df_casa, df_fora, df_res, df_inf = estilizar_df(df_concatenado_time_casa, df_concatenado_time_fora, df_resultados_confrontos_diretos, df_info_confrontos_diretos, time_casa_widget, time_fora_widget, tabela, legenda)
+                        st.header('**Previsões para a partida**')
+                        st.subheader(f"{time_casa_widget} x {time_fora_widget}")
+                        st.write(f'**Árbitro: {arbitro_widget}**')
+                        st.write(f'**Data da partida: {data_widget}**')
+                        
+                        st.table(df)
+                        st.write('Últimos resultados do {}'.format(time_casa_widget))
+                        st.write('**Últimos resultados do {}**'.format(time_casa_widget))
+                        st.table(df_casa)
+                        st.write('**Últimos resultados do {}**'.format(time_fora_widget))
+                        st.table(df_fora)
+                        st.write('**Confrontos diretos entre {} e {}**'.format(time_casa_widget, time_fora_widget))
+                        st.table(df_res)
+                        st.write('**Informações dos confrontos diretos entre {} e {}**'.format(time_casa_widget, time_fora_widget))
+                        st.table(df_inf)
 
-              except ValueError:
-                st.error('**Data inválida. Por favor, selecione outra data.**')
+                except ValueError:
+                    st.error('**Data inválida. Por favor, selecione outra data.**')
 
 if __name__ == '__main__':
     main()
