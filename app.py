@@ -3493,7 +3493,7 @@ def main():
                         st.header('**Previsões para a partida**')
                         st.subheader(f"{time_casa_widget} x {time_fora_widget}")
                         st.write(f'**Árbitro: {arbitro_widget}**')
-                        st.write(f'**Data da partida: {data_widget}**')
+                        st.write(f'**Data da partida: {data_da_partida}**')
 
                         st.table(df_tabela)
                         st.write('**Legenda dos Padrões**')
@@ -3506,8 +3506,8 @@ def main():
                         st.table(df_res)
                         st.write('**Informações dos confrontos diretos entre {} e {}**'.format(time_casa_widget, time_fora_widget))
                         st.table(df_inf)
-                        st.write('**Padrões e Acurácia**')
-                        st.table(df_final)
+                        #st.write('**Padrões e Acurácia**')
+                        #st.table(df_final)
                       else:
                         df = padroes_usuario(time_casa_widget, time_fora_widget, arbitro_widget, multi_target_rfc, le, partidas_anteriores, acuracia, padroes_selecionados)
                         tabela, legenda = gerar_tabela(time_casa_widget, time_fora_widget, arbitro_widget, multi_target_rfc, le, partidas_anteriores, acuracia)
