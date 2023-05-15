@@ -3495,7 +3495,7 @@ def main():
                         st.write(f'**Árbitro: {arbitro_widget}**')
                         st.write(f'**Data da partida: {data_da_partida}**')
 
-                        st.dataframe(df_tabela)
+                        st.table(df_tabela)
                         st.write('**Legenda dos Padrões**')
                         st.table(df_legenda)
                         st.write('**Últimos resultados do {}**'.format(time_casa_widget))
