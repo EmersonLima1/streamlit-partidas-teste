@@ -3370,42 +3370,47 @@ def padroes_assertivos(partidas_df, data_da_partida, partidas_anteriores, multi_
 
   df_final = pd.concat(dataframes, ignore_index=True)
 
-# Criar um dicionário vazio para armazenar os dados
+  # Criar um dicionário vazio para armazenar os dados
   data = {'Variáveis-alvo': [], 'Padrões assertivos': [], 'Número de ocorrências': []}
 
   # Loop para percorrer as variáveis-alvo
-  variaveis_alvo = ['resultado_partida', 'resultado_intervalo', 'resultado_num_gols_over_under', 
-                  'resultado_ambas_equipes_marcaram', 'resultado_num_cartoes_amarelos', 
-                  'resultado_num_cartoes_vermelhos', 'resultado_num_cartoes_totais', 
-                  'resultado_ambas_equipes_receberam_cartoes', 'resultado_cartoes_ambos_tempo',
-                  'resultado_num_escanteios', 'resultado_num_cartoes_primeiro',
-                  'resultado_num_cartoes_segundo']
+  variaveis_alvo = ['resultado_partida', 'resultado_intervalo', 'resultado_num_gols_over_under',
+                    'resultado_ambas_equipes_marcaram', 'resultado_num_cartoes_amarelos',
+                    'resultado_num_cartoes_vermelhos', 'resultado_num_cartoes_totais',
+                    'resultado_ambas_equipes_receberam_cartoes', 'resultado_cartoes_ambos_tempo',
+                    'resultado_num_escanteios', 'resultado_num_cartoes_primeiro',
+                    'resultado_num_cartoes_segundo']
 
   for variavel in variaveis_alvo:
-    # Filtrar os dados para a variável-alvo atual
-    df_variavel = df_final[df_final['Variáveis-alvo'] == variavel]
-    
-    # Obter todos os padrões associados à variável-alvo
-    padroes = []
-    for p in df_variavel['Padrões']:
-        padroes.extend([int(x) for x in re.findall(r'\d+', p)])
-    
-    # Contar o número de ocorrências de cada padrão
-    ocorrencias = {p: padroes.count(p) for p in padroes}
-    
-    # Filtrar os padrões que ocorrem igual ou mais do que 6 vezes
-    padroes_assertivos = [p for p, count in ocorrencias.items() if count >= 6]
-    
-    # Ordenar os padrões em ordem crescente
-    padroes_assertivos.sort()
-    
-    # Obter o número de ocorrências de cada padrão assertivo
-    num_ocorrencias = {p: min(ocorrencias[p], 10) for p in padroes_assertivos}
+      # Filtrar os dados para a variável-alvo atual
+      df_variavel = df_final[df_final['Variáveis-alvo'] == variavel]
 
-    # Adicionar os dados ao dicionário
-    data['Variáveis-alvo'].append(variavel)
-    data['Padrões assertivos'].append(padroes_assertivos)
-    data['Número de ocorrências'].append(num_ocorrencias)
+      # Obter todos os padrões associados à variável-alvo
+      padroes = []
+      for p in df_variavel['Padrões']:
+        padroes.extend([int(x) for x in re.findall(r'\[([\d\s,]+)\]', p) for x in x.split(',') if x.strip()])
+
+      # Criar um dicionário para armazenar as ocorrências de cada padrão
+      ocorrencias = {}
+      for p in padroes:
+          if p not in ocorrencias:
+              ocorrencias[p] = 1
+          else:
+              ocorrencias[p] += 1
+
+      # Filtrar os padrões que ocorrem igual ou mais do que 6 vezes
+      padroes_assertivos = [p for p, count in ocorrencias.items() if count >= 6]
+
+      # Verificar o número de ocorrências de cada padrão assertivo
+      num_ocorrencias = {}
+      for p in padroes_assertivos:
+          if p in ocorrencias:
+              num_ocorrencias[p] = min(ocorrencias[p], 10)
+
+      # Adicionar os dados ao dicionário
+      data['Variáveis-alvo'].append(variavel)
+      data['Padrões assertivos'].append(sorted(padroes_assertivos))
+      data['Número de ocorrências'].append(num_ocorrencias)
 
   # Criar o novo dataframe
   df_novo = pd.DataFrame(data)
