@@ -3451,8 +3451,50 @@ def padroes_assertivos(partidas_df, data_da_partida, partidas_anteriores, multi_
         ])
         
     )
+
+  # Define um estilo para a tabela usando os seletores e propriedades do CSS
+  df_final = (df_final.style
+        .set_table_styles([{
+            'selector': 'caption', # Seletor CSS para o título da tabela
+            'props': [
+                ('color', '#FFFFFF'),
+                ('font-size', '18px'),
+                ('font-style', 'normal'),
+                ('font-weight', 'bold'),
+                ('text-align', 'center'),
+                ('background-color', '#126e51'),
+                ('border', '1px solid gray')
+            ]
+        },
+        {
+            'selector': 'th', # Seletor CSS para as células do cabeçalho
+            'props': [
+                ('background-color', '#126e51'),
+                ('color', 'black'),
+                ('font-size', '15px'),
+                ('font-weight', 'bold'),
+                ('text-align', 'center'),
+                ('border', '1px solid gray'),
+                ('white-space', 'pre-wrap')
+            ]
+        },
+        {
+            'selector': 'td', # Seletor CSS para as células de dados
+            'props': [
+                ('background-color', '#283734'),
+                ('color', 'white'),
+                ('font-size', '15px'),
+                ('font-weight', 'normal'),
+                ('text-align', 'center'),
+                ('border', '1px solid gray'),
+                ('white-space', 'pre-wrap')
+            ]
+        },
+        ])
+        
+    )
   
-  return (df_novo)
+  return (df_final, df_novo)
     
 # Interação com o usuário
 
@@ -3529,7 +3571,7 @@ def main():
                       if considerar_todos == True:
                         tabela, legenda = gerar_tabela(time_casa_widget, time_fora_widget, arbitro_widget, multi_target_rfc, le, partidas_anteriores, acuracia)
                         df_tabela, df_legenda, df_casa, df_fora, df_res, df_inf = estilizar_df(df_concatenado_time_casa, df_concatenado_time_fora, df_resultados_confrontos_diretos, df_info_confrontos_diretos, time_casa_widget, time_fora_widget, tabela, legenda)
-                        df_final = padroes_assertivos(partidas_df, data_da_partida, partidas_anteriores, multi_target_rfc, le, y_test)
+                        df_final, df_novo = padroes_assertivos(partidas_df, data_da_partida, partidas_anteriores, multi_target_rfc, le, y_test)
                         st.header('**Previsões para a partida**')
                         st.subheader(f"{time_casa_widget} x {time_fora_widget}")
                         st.write(f'**Árbitro: {arbitro_widget}**')
@@ -3546,12 +3588,15 @@ def main():
                         st.table(df_res)
                         st.write('**Informações dos confrontos diretos entre {} e {}**'.format(time_casa_widget, time_fora_widget))
                         st.table(df_inf)
-                        st.write('**Padrões assertivos**')
+                        st.write('**Padrões nas 10 partidas**')
                         st.table(df_final)
+                        st.write('**Padrões mais assertivos**')
+                        st.table(df_novo)
                       else:
                         df = padroes_usuario(time_casa_widget, time_fora_widget, arbitro_widget, multi_target_rfc, le, partidas_anteriores, acuracia, padroes_selecionados)
                         tabela, legenda = gerar_tabela(time_casa_widget, time_fora_widget, arbitro_widget, multi_target_rfc, le, partidas_anteriores, acuracia)
                         df_tabela, df_legenda, df_casa, df_fora, df_res, df_inf = estilizar_df(df_concatenado_time_casa, df_concatenado_time_fora, df_resultados_confrontos_diretos, df_info_confrontos_diretos, time_casa_widget, time_fora_widget, tabela, legenda)
+                        df_final, df_novo = padroes_assertivos(partidas_df, data_da_partida, partidas_anteriores, multi_target_rfc, le, y_test)
                         st.header('**Previsões para a partida**')
                         st.subheader(f"{time_casa_widget} x {time_fora_widget}")
                         st.write(f'**Árbitro: {arbitro_widget}**')
@@ -3567,6 +3612,10 @@ def main():
                         st.table(df_res)
                         st.write('**Informações dos confrontos diretos entre {} e {}**'.format(time_casa_widget, time_fora_widget))
                         st.table(df_inf)
+                        st.write('**Padrões nas 10 partidas**')
+                        st.table(df_final)
+                        st.write('**Padrões mais assertivos**')
+                        st.table(df_novo)
 
                 except ValueError:
                     st.error('**Data inválida. Por favor, selecione outra data.**')
